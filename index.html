@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบเบิกวัสดุสำนักงาน</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        body { font-family: 'Sarabun', sans-serif; background-color: #f0f4f8; }
+        .swal2-popup { font-family: 'Sarabun', sans-serif !important; }
+        .table-container::-webkit-scrollbar { height: 8px; }
+        .table-container::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 4px; }
+        .animate-fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <nav class="bg-white shadow-sm border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <svg class="w-8 h-8 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+                    <span class="font-bold text-xl text-slate-800 tracking-tight">Requisition<span class="text-blue-600">Sys</span></span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button onclick="switchTab('user')" id="btn-tab-user" class="px-4 py-2 rounded-md text-sm font-medium transition-colors bg-blue-600 text-white">หน้าเบิกวัสดุ</button>
+                    <button onclick="switchTab('admin')" id="btn-tab-admin" class="px-4 py-2 rounded-md text-sm font-medium transition-colors bg-white text-slate-600 border border-slate-300">ผู้ดูแลระบบ</button>
+                    <button onclick="switchTab('dashboard')" id="btn-tab-dashboard" class="px-4 py-2 rounded-md text-sm font-medium transition-colors bg-white text-slate-600 border border-slate-300">คลังสินค้า</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow p-4 sm:p-6 lg:p-8 flex justify-center">
+
+        <!-- ================= PAGE 1: USER ================= -->
+        <div id="page-user" class="w-full max-w-md w-full animate-fade-in block">
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
+                <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-8 text-center">
+                    <h2 class="text-2xl font-bold text-white mb-1">📝 เบิกวัสดุสำนักงาน</h2>
+                    <p class="text-blue-100 text-sm">กรอกข้อมูลให้ครบถ้วนเพื่อส่งคำขอ</p>
+                </div>
+                <form id="requisitionForm" onsubmit="handleFormSubmit(event)" class="p-6 space-y-5">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">ชื่อ-นามสกุลผู้เบิก</label>
+                        <input type="text" id="name" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">แผนก</label>
+                        <select id="department" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-white">
+                            <option value="" disabled selected>-- เลือกแผนก --</option>
+                            <option value="IT">IT (เทคโนโลยีสารสนเทศ)</option>
+                            <option value="HR">HR (ฝ่ายบุคคล)</option>
+                            <option value="บัญชี">บัญชีและการเงิน</option>
+                            <option value="ธุรการ">ธุรการ</option>
+                            <option value="การตลาด">การตลาด</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">รายการวัสดุ</label>
+                        <select id="item" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-white">
+                            <option value="" disabled selected>กำลังโหลดข้อมูล...</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">จำนวนที่ต้องการ</label>
+                        <input type="number" id="quantity" min="1" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm">
+                    </div>
+                    <div class="pt-2">
+                        <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors shadow-md flex justify-center items-center">
+                            <span>ส่งคำขอเบิก</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ================= PAGE 2: ADMIN ================= -->
+        <div id="page-admin" class="w-full max-w-5xl hidden animate-fade-in">
+            <h2 class="text-2xl font-bold text-slate-800 mb-4">🛠️ แผงควบคุมผู้ดูแลระบบ</h2>
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-6">
+                <div class="px-6 py-5 border-b border-slate-100 flex justify-between bg-slate-50">
+                    <h3 class="text-lg font-bold text-slate-800">คำขอเบิกที่รอตรวจสอบ</h3>
+                    <button onclick="refreshData()" class="text-blue-600 text-sm font-bold">↻ รีเฟรชข้อมูล</button>
+                </div>
+                <div class="table-container overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-white border-b border-slate-200 text-xs uppercase tracking-wider text-slate-500">
+                                <th class="px-6 py-4 font-semibold">ข้อมูลคำขอ</th>
+                                <th class="px-6 py-4 font-semibold">รายการวัสดุ</th>
+                                <th class="px-6 py-4 font-semibold text-center">สถานะ</th>
+                                <th class="px-6 py-4 font-semibold text-right">จัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="requestsBody" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                    <div id="emptyState" class="hidden text-center py-12 text-slate-500">ไม่มีคำขอที่รออนุมัติ</div>
+                </div>
+            </div>
+
+            <!-- ประวัติการเบิก -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 cursor-pointer" onclick="document.getElementById('historyContent').classList.toggle('hidden')">
+                    <h3 class="text-sm font-bold text-slate-600">ประวัติการดำเนินการ (คลิกเพื่อแสดง/ซ่อน)</h3>
+                </div>
+                <div id="historyContent" class="hidden table-container overflow-x-auto max-h-64">
+                    <table class="w-full text-left border-collapse text-sm">
+                        <thead class="bg-white border-b border-slate-100 text-xs text-slate-400 sticky top-0">
+                            <tr>
+                                <th class="px-6 py-3">รหัส / เวลา</th><th class="px-6 py-3">ผู้เบิก</th><th class="px-6 py-3">รายการ</th><th class="px-6 py-3">สถานะ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyBody" class="divide-y divide-slate-50 text-slate-600"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= PAGE 3: DASHBOARD ================= -->
+        <div id="page-dashboard" class="w-full max-w-5xl hidden animate-fade-in">
+            <div class="mb-6 flex justify-between items-center">
+                <h2 class="text-2xl font-bold text-slate-800">📦 คลังสินค้า (Inventory)</h2>
+                <button onclick="openAddItemModal()" class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-sm">+ เพิ่มรายการใหม่</button>
+            </div>
+            
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="table-container overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-white border-b border-slate-200 text-xs uppercase tracking-wider text-slate-500">
+                                <th class="px-6 py-4 font-semibold">ชื่อรายการวัสดุ</th>
+                                <th class="px-6 py-4 font-semibold text-center">คงเหลือ</th>
+                                <th class="px-6 py-4 font-semibold text-center">จุดแจ้งเตือน</th>
+                                <th class="px-6 py-4 font-semibold text-center">สถานะ</th>
+                                <th class="px-6 py-4 font-semibold text-right">จัดการ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryBody" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // ============================================================================
+        // 1. นำ Web App URL ของ Google Apps Script มาใส่ที่นี่ !!!
+        // ============================================================================
+        const API_URL = "https://script.google.com/macros/s/AKfycbzXe2i0cqWqj8Xe4sd5HOj4czk231hkwyBzQNC9zm9Wd0Gbtu6ZJCjJ731r4DJnYoPC/exec"; 
+        const ADMIN_NAME = "System Admin";
+        
+        let globalData = { inventory: [], requests: [] };
+
+        // ============================================================================
+        // 2. ฟังก์ชันหลักสำหรับเรียก API ข้ามโดเมนไปหา Google Apps Script
+        // ============================================================================
+        async function callAPI(action, payload = {}) {
+            try {
+                // ส่งเป็น text/plain เพื่อหลีกเลี่ยง CORS Preflight บนเบราว์เซอร์
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action: action, ...payload })
+                });
+                return await response.json();
+            } catch (error) {
+                console.error("API Error:", error);
+                throw error;
+            }
+        }
+
+        // ============================================================================
+        // 3. ฟังก์ชันดึงข้อมูลทั้งหมดจากระบบ
+        // ============================================================================
+        async function refreshData(showLoading = true) {
+            if(showLoading) Swal.fire({ title: 'กำลังโหลดข้อมูล...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+            
+            try {
+                const res = await callAPI('getData');
+                if(res.status === 'success') {
+                    globalData.inventory = res.inventory;
+                    globalData.requests = res.requests;
+                    renderUI(); // อัปเดตหน้าจอทั้งหมด
+                    if(showLoading) Swal.close();
+                } else {
+                    Swal.fire('ข้อผิดพลาด', res.message, 'error');
+                }
+            } catch (e) {
+                Swal.fire('ข้อผิดพลาดในการเชื่อมต่อ', 'ไม่สามารถเชื่อมต่อฐานข้อมูลได้ กรุณาตรวจสอบ API_URL', 'error');
+            }
+        }
+
+        // ============================================================================
+        // 4. การจัดการ UI
+        // ============================================================================
+        function switchTab(tabId) {
+            ['user', 'admin', 'dashboard'].forEach(t => {
+                document.getElementById(`page-${t}`).classList.add('hidden');
+                document.getElementById(`page-${t}`).classList.remove('block');
+                document.getElementById(`btn-tab-${t}`).className = "px-4 py-2 rounded-md text-sm font-medium transition-colors bg-white text-slate-600 border border-slate-300 hover:bg-slate-50";
+            });
+
+            document.getElementById(`page-${tabId}`).classList.remove('hidden');
+            document.getElementById(`page-${tabId}`).classList.add('block');
+            
+            let activeColor = tabId === 'user' ? 'bg-blue-600' : (tabId === 'admin' ? 'bg-slate-800' : 'bg-indigo-600');
+            document.getElementById(`btn-tab-${tabId}`).className = `px-4 py-2 rounded-md text-sm font-medium transition-colors ${activeColor} text-white shadow-sm`;
+            
+            if(globalData.inventory.length === 0) refreshData();
+            else renderUI();
+        }
+
+        function renderUI() {
+            loadUserDropdown();
+            loadAdminTable();
+            loadDashboard();
+        }
+
+        function loadUserDropdown() {
+            var select = document.getElementById('item');
+            select.innerHTML = '<option value="" disabled selected>-- เลือกวัสดุ --</option>';
+            
+            let sortedItems = [...globalData.inventory].sort((a, b) => a.name.localeCompare(b.name));
+            sortedItems.forEach(item => {
+                var option = document.createElement('option');
+                option.value = item.name;
+                if(item.stock <= 0) { option.text = `${item.name} (ของหมด)`; option.disabled = true; } 
+                else { option.text = `${item.name} (เหลือ ${item.stock})`; }
+                select.add(option);
+            });
+        }
+
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+            var form = event.target;
+            var btn = document.getElementById("submitBtn");
+            btn.disabled = true; btn.innerHTML = 'กำลังส่งข้อมูล...';
+            
+            const formData = {
+                name: document.getElementById('name').value,
+                dept: document.getElementById('department').value,
+                item: document.getElementById('item').value,
+                qty: document.getElementById('quantity').value
+            };
+
+            try {
+                const res = await callAPI('saveRequest', { data: formData });
+                if(res.status === 'success') {
+                    Swal.fire({ icon: 'success', title: 'สำเร็จ!', text: `รหัสคำขอของคุณคือ: ${res.id}` });
+                    form.reset();
+                    refreshData(false); // อัปเดตข้อมูลเบื้องหลัง
+                } else {
+                    Swal.fire('ล้มเหลว', res.message, 'error');
+                }
+            } catch (e) {
+                Swal.fire('ข้อผิดพลาด', 'ส่งข้อมูลไม่สำเร็จ', 'error');
+            } finally {
+                btn.disabled = false; btn.innerHTML = 'ส่งคำขอเบิก';
+            }
+        }
+
+        function loadAdminTable() {
+            const tbody = document.getElementById('requestsBody');
+            const historyBody = document.getElementById('historyBody');
+            tbody.innerHTML = ''; historyBody.innerHTML = '';
+            let pendingCount = 0;
+
+            [...globalData.requests].reverse().forEach(req => {
+                if(req.status === "รออนุมัติ") {
+                    pendingCount++;
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50 border-b border-slate-100">
+                            <td class="px-6 py-4"><div class="font-bold">${req.id}</div><div class="text-xs">${req.timestamp}</div><div class="mt-1">${req.name} <span class="text-xs bg-slate-100 px-1 rounded">${req.dept}</span></div></td>
+                            <td class="px-6 py-4">${req.item}<div class="text-blue-600 font-bold mt-1">จำนวน: ${req.qty}</div></td>
+                            <td class="px-6 py-4 text-center"><span class="bg-amber-100 text-amber-800 px-2 rounded-full text-xs">รอพิจารณา</span></td>
+                            <td class="px-6 py-4 text-right">
+                                <button onclick="processRequest('${req.id}', 'อนุมัติแล้ว')" class="bg-emerald-50 text-emerald-600 px-3 py-1 rounded border border-emerald-200">อนุมัติ</button>
+                                <button onclick="processRequest('${req.id}', 'ไม่อนุมัติ')" class="bg-rose-50 text-rose-600 px-3 py-1 rounded border border-rose-200 ml-1">ปฏิเสธ</button>
+                            </td>
+                        </tr>`;
+                } else {
+                    let badge = req.status === "อนุมัติแล้ว" ? `<span class="text-emerald-600 text-xs">${req.status}</span>` : `<span class="text-rose-600 text-xs">${req.status}</span>`;
+                    historyBody.innerHTML += `<tr><td class="px-6 py-2">${req.id}</td><td class="px-6 py-2">${req.name}</td><td class="px-6 py-2">${req.item} (x${req.qty})</td><td class="px-6 py-2">${badge}</td></tr>`;
+                }
+            });
+
+            document.getElementById('emptyState').style.display = pendingCount === 0 ? 'block' : 'none';
+        }
+
+        async function processRequest(id, newStatus) {
+            const req = globalData.requests.find(r => r.id === id);
+            const item = globalData.inventory.find(i => i.name === req.item);
+            
+            if (newStatus === 'อนุมัติแล้ว' && item && item.stock < req.qty) {
+                return Swal.fire('สต๊อกไม่พอ!', `มีของ ${item.stock} แต่ขอเบิก ${req.qty}`, 'error');
+            }
+
+            const confirm = await Swal.fire({ title: 'ยืนยัน?', text: `ต้องการ${newStatus}?`, icon: 'warning', showCancelButton: true });
+            if(confirm.isConfirmed) {
+                Swal.fire({ title: 'กำลังบันทึก...', didOpen: () => { Swal.showLoading() }});
+                const res = await callAPI('updateStatus', { id: id, status: newStatus, adminName: ADMIN_NAME });
+                if(res.status === 'success') {
+                    Swal.fire('สำเร็จ', 'อัปเดตเรียบร้อย', 'success');
+                    refreshData(false);
+                } else Swal.fire('ผิดพลาด', res.message, 'error');
+            }
+        }
+
+        function loadDashboard() {
+            const tbody = document.getElementById('inventoryBody');
+            tbody.innerHTML = '';
+            
+            [...globalData.inventory].sort((a,b) => a.name.localeCompare(b.name)).forEach(item => {
+                const isLow = item.stock <= item.threshold;
+                const statusHtml = isLow ? `<span class="bg-rose-100 text-rose-700 px-2 rounded-full text-xs">ใกล้หมด</span>` : `<span class="bg-emerald-100 text-emerald-700 px-2 rounded-full text-xs">ปกติ</span>`;
+                tbody.innerHTML += `
+                    <tr class="${isLow ? 'bg-rose-50/30' : ''} border-b border-slate-100">
+                        <td class="px-6 py-4">${item.name}</td>
+                        <td class="px-6 py-4 text-center font-bold text-lg ${isLow ? 'text-rose-600' : ''}">${item.stock}</td>
+                        <td class="px-6 py-4 text-center">${item.threshold}</td>
+                        <td class="px-6 py-4 text-center">${statusHtml}</td>
+                        <td class="px-6 py-4 text-right">
+                            <button onclick="restockItem('${item.name}')" class="bg-blue-50 text-blue-600 px-3 py-1 rounded text-sm">+ เพิ่มสต๊อก</button>
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        async function restockItem(name) {
+            const { value: qty } = await Swal.fire({ title: `เพิ่มสต๊อก ${name}`, input: 'number', inputAttributes: { min: 1 }, showCancelButton: true });
+            if (qty) {
+                Swal.fire({ title: 'กำลังบันทึก...', didOpen: () => { Swal.showLoading() }});
+                const res = await callAPI('restockItem', { name: name, qty: parseInt(qty) });
+                if(res.status === 'success') { Swal.fire('สำเร็จ', 'อัปเดตสต๊อกแล้ว', 'success'); refreshData(false); }
+                else Swal.fire('ผิดพลาด', res.message, 'error');
+            }
+        }
+
+        async function openAddItemModal() {
+            const { value: formValues } = await Swal.fire({
+                title: 'เพิ่มรายการวัสดุใหม่',
+                html: '<input id="swal-input1" class="swal2-input" placeholder="ชื่อวัสดุ">' +
+                      '<input id="swal-input2" type="number" class="swal2-input" placeholder="สต๊อกเริ่มต้น">' +
+                      '<input id="swal-input3" type="number" class="swal2-input" placeholder="จุดแจ้งเตือน">',
+                focusConfirm: false, showCancelButton: true,
+                preConfirm: () => {
+                    return {
+                        name: document.getElementById('swal-input1').value,
+                        stock: parseInt(document.getElementById('swal-input2').value) || 0,
+                        threshold: parseInt(document.getElementById('swal-input3').value) || 10
+                    }
+                }
+            });
+            if(formValues && formValues.name) {
+                Swal.fire({ title: 'กำลังบันทึก...', didOpen: () => { Swal.showLoading() }});
+                const res = await callAPI('addInventoryItem', { data: formValues });
+                if(res.status === 'success') { Swal.fire('สำเร็จ', 'เพิ่มรายการแล้ว', 'success'); refreshData(false); }
+                else Swal.fire('ผิดพลาด', res.message, 'error');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', refreshData);
+    </script>
+</body>
+</html>
