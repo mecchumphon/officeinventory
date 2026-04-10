@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="th">
-<head> 
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบเบิกวัสดุสำนักงานศุนย์แพทย์</title>
+    <title>ระบบเบิกจ่ายวัสดุอุปกรณ์สำนักงาน</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,8 +28,8 @@
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
-                    <svg class="w-8 h-8 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
-                    <span class="font-bold text-xl text-slate-800 tracking-tight">Requisition<span class="text-blue-600">Sys</span></span>
+                    <svg class="w-8 h-8 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path></svg>
+                    <span class="font-bold text-xl text-slate-800 tracking-tight">ระบบเบิกจ่าย<span class="text-blue-600">วัสดุอุปกรณ์</span></span>
                 </div>
                 <div class="flex items-center space-x-2">
                     <button onclick="switchTab('user')" id="btn-tab-user" class="px-4 py-2 rounded-md text-sm font-medium transition-colors bg-blue-600 text-white">หน้าเบิกวัสดุ</button>
@@ -46,7 +46,7 @@
         <div id="page-user" class="w-full max-w-md w-full animate-fade-in block">
             <div class="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
                 <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-8 text-center">
-                    <h2 class="text-2xl font-bold text-white mb-1">📝 เบิกวัสดุสำนักงาน</h2>
+                    <h2 class="text-2xl font-bold text-white mb-1">📝 ระบบเบิกจ่ายวัสดุอุปกรณ์</h2>
                     <p class="text-blue-100 text-sm">กรอกข้อมูลให้ครบถ้วนเพื่อส่งคำขอ</p>
                 </div>
                 <form id="requisitionForm" onsubmit="handleFormSubmit(event)" class="p-6 space-y-5">
@@ -157,8 +157,12 @@
         // ============================================================================
         // 1. นำ Web App URL ของ Google Apps Script มาใส่ที่นี่ !!!
         // ============================================================================
-        const API_URL = "https://script.google.com/macros/s/AKfycbzXe2i0cqWqj8Xe4sd5HOj4czk231hkwyBzQNC9zm9Wd0Gbtu6ZJCjJ731r4DJnYoPC/exec"; 
+        const API_URL = "ใส่_WEB_APP_URL_ที่ได้จาก_GOOGLE_APPS_SCRIPT_ที่นี่"; 
         const ADMIN_NAME = "System Admin";
+        
+        // --- เพิ่มการตั้งค่ารหัสผ่านตรงนี้ ---
+        const ADMIN_PASSWORD = "1234"; // เปลี่ยนรหัสผ่านตรงนี้
+        let isAdminLoggedIn = false;   // ตัวแปรเช็คสถานะการล็อกอิน
         
         let globalData = { inventory: [], requests: [] };
 
@@ -204,7 +208,36 @@
         // ============================================================================
         // 4. การจัดการ UI
         // ============================================================================
-        function switchTab(tabId) {
+        async function switchTab(tabId) {
+            // ระบบตรวจสอบรหัสผ่านสำหรับหน้า Admin และ Dashboard
+            if ((tabId === 'admin' || tabId === 'dashboard') && !isAdminLoggedIn) {
+                const { value: password } = await Swal.fire({
+                    title: '🔒 ยืนยันตัวตน',
+                    input: 'password',
+                    inputLabel: 'กรุณาใส่รหัสผ่านเพื่อเข้าถึงส่วนผู้ดูแลระบบ',
+                    inputPlaceholder: 'รหัสผ่าน',
+                    showCancelButton: true,
+                    confirmButtonText: 'เข้าสู่ระบบ',
+                    cancelButtonText: 'ยกเลิก',
+                    confirmButtonColor: '#2563eb',
+                    inputValidator: (value) => {
+                        if (!value) return 'กรุณาใส่รหัสผ่าน!';
+                    }
+                });
+
+                if (password) {
+                    if (password === ADMIN_PASSWORD) {
+                        isAdminLoggedIn = true;
+                        await Swal.fire({ icon: 'success', title: 'เข้าสู่ระบบสำเร็จ', timer: 1000, showConfirmButton: false });
+                    } else {
+                        Swal.fire({ icon: 'error', title: 'รหัสผ่านไม่ถูกต้อง!', text: 'กรุณาลองใหม่อีกครั้ง' });
+                        return; // หยุดการทำงาน ไม่สลับหน้า
+                    }
+                } else {
+                    return; // กรณีพับหน้าต่างหรือกดยกเลิก
+                }
+            }
+
             ['user', 'admin', 'dashboard'].forEach(t => {
                 document.getElementById(`page-${t}`).classList.add('hidden');
                 document.getElementById(`page-${t}`).classList.remove('block');
