@@ -363,11 +363,64 @@
                         <td class="px-6 py-4 text-center font-bold text-lg ${isLow ? 'text-rose-600' : ''}">${item.stock}</td>
                         <td class="px-6 py-4 text-center">${item.threshold}</td>
                         <td class="px-6 py-4 text-center">${statusHtml}</td>
-                        <td class="px-6 py-4 text-right">
-                            <button onclick="restockItem('${item.name}')" class="bg-blue-50 text-blue-600 px-3 py-1 rounded text-sm">+ เพิ่มสต๊อก</button>
+                        <td class="px-6 py-4 text-right space-x-1">
+                            <button onclick="editItem('${item.name}')" class="bg-amber-50 text-amber-600 hover:bg-amber-100 px-2 py-1.5 rounded text-sm border border-amber-200" title="แก้ไข">✏️</button>
+                            <button onclick="deleteItem('${item.name}')" class="bg-rose-50 text-rose-600 hover:bg-rose-100 px-2 py-1.5 rounded text-sm border border-rose-200" title="ลบ">🗑️</button>
+                            <button onclick="restockItem('${item.name}')" class="bg-blue-50 text-blue-600 hover:bg-blue-100 px-3 py-1.5 rounded text-sm border border-blue-200">+ เพิ่มสต๊อก</button>
                         </td>
                     </tr>`;
             });
+        }
+
+        async function editItem(name) {
+            const item = globalData.inventory.find(i => i.name === name);
+            if(!item) return;
+
+            const { value: formValues } = await Swal.fire({
+                title: 'แก้ไขรายการวัสดุ',
+                html: '<label class="block text-left text-sm font-semibold text-slate-700 mb-1 mt-2">ชื่อวัสดุ</label>' +
+                      `<input id="edit-name" class="swal2-input !mt-0 !mb-3" value="${item.name}">` +
+                      '<label class="block text-left text-sm font-semibold text-slate-700 mb-1">สต๊อกปัจจุบัน</label>' +
+                      `<input id="edit-stock" type="number" class="swal2-input !mt-0 !mb-3" value="${item.stock}">` +
+                      '<label class="block text-left text-sm font-semibold text-slate-700 mb-1">จุดแจ้งเตือน</label>' +
+                      `<input id="edit-threshold" type="number" class="swal2-input !mt-0 !mb-3" value="${item.threshold}">`,
+                focusConfirm: false, showCancelButton: true,
+                preConfirm: () => {
+                    return {
+                        oldName: name,
+                        newName: document.getElementById('edit-name').value,
+                        stock: parseInt(document.getElementById('edit-stock').value) || 0,
+                        threshold: parseInt(document.getElementById('edit-threshold').value) || 0
+                    }
+                }
+            });
+
+            if(formValues && formValues.newName) {
+                Swal.fire({ title: 'กำลังบันทึก...', didOpen: () => { Swal.showLoading() }});
+                const res = await callAPI('editInventoryItem', { data: formValues });
+                if(res.status === 'success') { Swal.fire('สำเร็จ', 'แก้ไขรายการแล้ว', 'success'); refreshData(false); }
+                else Swal.fire('ผิดพลาด', res.message, 'error');
+            }
+        }
+
+        async function deleteItem(name) {
+            const confirm = await Swal.fire({
+                title: 'ยืนยันการลบ?',
+                text: `คุณต้องการลบ "${name}" ออกจากระบบใช่หรือไม่?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#e3342f',
+                cancelButtonColor: '#94a3b8',
+                confirmButtonText: 'ใช่, ลบเลย',
+                cancelButtonText: 'ยกเลิก'
+            });
+            
+            if(confirm.isConfirmed) {
+                Swal.fire({ title: 'กำลังลบ...', didOpen: () => { Swal.showLoading() }});
+                const res = await callAPI('deleteInventoryItem', { name: name });
+                if(res.status === 'success') { Swal.fire('สำเร็จ', 'ลบรายการแล้ว', 'success'); refreshData(false); }
+                else Swal.fire('ผิดพลาด', res.message, 'error');
+            }
         }
 
         async function restockItem(name) {
