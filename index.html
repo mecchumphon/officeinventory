@@ -7,7 +7,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -24,6 +24,7 @@
             font-family: 'Sarabun', sans-serif; 
             background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
             min-height: 100vh;
+            font-size: 18px; /* ปรับขนาดพื้นฐานให้อ่านง่าย */
         }
         .swal2-popup { font-family: 'Sarabun', sans-serif !important; border-radius: 2rem !important; }
         
@@ -51,36 +52,41 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
 
         input, select {
-            @apply border-2 border-pink-50 focus:border-pink-300 focus:ring-4 focus:ring-pink-100 transition-all outline-none;
+            @apply border-2 border-pink-50 focus:border-pink-300 focus:ring-4 focus:ring-pink-100 transition-all outline-none text-lg;
+        }
+
+        /* เน้นหัวตารางให้ใหญ่และหนาตามคำขอ */
+        thead th {
+            @apply text-pink-600 font-black uppercase tracking-wider py-6 px-8 text-lg lg:text-xl border-b border-pink-100;
         }
     </style>
 </head>
-<body class="text-slate-700 antialiased">
+<body class="text-slate-800 antialiased">
 
     <!-- Pastel Pink Navigation -->
     <nav class="nav-card border-b border-pink-100 sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-4">
-            <div class="flex flex-col sm:flex-row items-center justify-between py-4 sm:h-24">
+            <div class="flex flex-col sm:flex-row items-center justify-between py-5 sm:h-28">
                 <div class="flex items-center mb-4 sm:mb-0 group cursor-pointer" onclick="location.reload()">
                     <div class="relative">
                         <div class="absolute -inset-2 bg-pink-200 rounded-full blur-xl opacity-40 group-hover:opacity-60 transition duration-500"></div>
                         <img src="logo.jpg" 
-                             alt="โลโก้ศูนย์แพทย์" class="relative h-12 sm:h-14 w-auto object-contain">
+                             alt="โลโก้ศูนย์แพทย์" class="relative h-14 sm:h-16 w-auto object-contain">
                     </div>
                     <div class="ml-4">
-                        <h1 class="font-bold text-xl sm:text-2xl text-slate-800 tracking-tight leading-none">ระบบเบิกจ่ายวัสดุสำนักงาน</h1>
-                        <p class="text-pink-500 font-semibold text-[10px] sm:text-xs mt-1 uppercase tracking-[0.15em]">MECCP Requisition System</p>
+                        <h1 class="font-extrabold text-2xl lg:text-3xl text-slate-800 tracking-tight leading-none">ระบบเบิกจ่ายวัสดุสำนักงาน</h1>
+                        <p class="text-pink-500 font-bold text-xs sm:text-sm mt-1.5 uppercase tracking-[0.15em]">MECCP Requisition System</p>
                     </div>
                 </div>
                 
                 <div class="flex items-center p-1.5 bg-pink-50/80 rounded-2xl w-full sm:w-auto border border-pink-100/50">
-                    <button onclick="switchTab('user')" id="btn-tab-user" class="flex-1 sm:flex-none flex items-center justify-center px-5 py-2.5 rounded-xl text-sm font-bold glass-btn bg-white text-pink-500 shadow-sm border border-pink-100">
+                    <button onclick="switchTab('user')" id="btn-tab-user" class="flex-1 sm:flex-none flex items-center justify-center px-6 py-3 rounded-xl text-base font-bold glass-btn bg-white text-pink-500 shadow-sm border border-pink-100">
                         <span>หน้าเบิก</span>
                     </button>
-                    <button onclick="switchTab('admin')" id="btn-tab-admin" class="flex-1 sm:flex-none flex items-center justify-center px-5 py-2.5 rounded-xl text-sm font-bold glass-btn text-slate-400 hover:text-pink-500">
+                    <button onclick="switchTab('admin')" id="btn-tab-admin" class="flex-1 sm:flex-none flex items-center justify-center px-6 py-3 rounded-xl text-base font-bold glass-btn text-slate-400 hover:text-pink-500">
                         <span>อนุมัติ</span>
                     </button>
-                    <button onclick="switchTab('dashboard')" id="btn-tab-dashboard" class="flex-1 sm:flex-none flex items-center justify-center px-5 py-2.5 rounded-xl text-sm font-bold glass-btn text-slate-400 hover:text-pink-500">
+                    <button onclick="switchTab('dashboard')" id="btn-tab-dashboard" class="flex-1 sm:flex-none flex items-center justify-center px-6 py-3 rounded-xl text-base font-bold glass-btn text-slate-400 hover:text-pink-500">
                         <span>คลัง</span>
                     </button>
                 </div>
@@ -88,54 +94,54 @@
         </div>
     </nav>
 
-    <main class="max-w-6xl mx-auto p-4 sm:p-8 flex justify-center">
+    <main class="max-w-6xl mx-auto p-4 sm:p-10 flex justify-center">
 
         <!-- ================= PAGE 1: USER ================= -->
-        <div id="page-user" class="w-full max-w-lg animate-fade-in block">
-            <div class="bg-white rounded-[3rem] pastel-shadow border border-pink-50 p-3">
-                <div class="bg-pink-400 rounded-[2.5rem] px-8 py-12 text-center relative overflow-hidden shadow-inner">
+        <div id="page-user" class="w-full max-w-xl animate-fade-in block">
+            <div class="bg-white rounded-[3.5rem] pastel-shadow border border-pink-50 p-3">
+                <div class="bg-pink-400 rounded-[2.8rem] px-8 py-14 text-center relative overflow-hidden shadow-inner">
                     <div class="absolute -top-12 -left-12 w-48 h-48 bg-white/20 rounded-full blur-3xl"></div>
                     <div class="absolute -bottom-12 -right-12 w-48 h-48 bg-pink-300/30 rounded-full blur-3xl"></div>
-                    <h2 class="text-3xl font-extrabold text-white mb-2">เบิกวัสดุอุปกรณ์สำนักงาน</h2>
-                    <p class="text-pink-50 font-medium text-sm">สะดวก รวดเร็ว และเป็นระบบ</p>
+                    <h2 class="text-4xl font-black text-white mb-2">เบิกวัสดุอุปกรณ์</h2>
+                    <p class="text-pink-50 font-bold text-lg">สะดวก รวดเร็ว และเป็นระบบ</p>
                 </div>
                 
-                <div id="lowStockAlertContainer" class="px-6 pt-6 hidden">
-                    <div class="bg-rose-50 border border-rose-100 rounded-[2rem] p-5">
-                        <div class="flex items-center text-rose-700 font-bold text-xs mb-3">
-                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                <div id="lowStockAlertContainer" class="px-7 pt-7 hidden">
+                    <div class="bg-rose-50 border border-rose-100 rounded-[2.2rem] p-6">
+                        <div class="flex items-center text-rose-700 font-black text-sm mb-4">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                             รายการใกล้หมด (กรุณาแจ้งฝ่ายพัสดุ)
                         </div>
-                        <ul id="lowStockList" class="text-[11px] text-rose-600/80 space-y-2 grid grid-cols-1 sm:grid-cols-2 gap-x-4"></ul>
+                        <ul id="lowStockList" class="text-sm text-rose-600/80 space-y-2 grid grid-cols-1 sm:grid-cols-2 gap-x-6"></ul>
                     </div>
                 </div>
 
-                <form id="requisitionForm" onsubmit="handleFormSubmit(event)" class="p-8 space-y-6">
+                <form id="requisitionForm" onsubmit="handleFormSubmit(event)" class="p-8 lg:p-10 space-y-8">
                     <div class="space-y-2">
-                        <label class="block text-sm font-bold text-slate-400 ml-1">ชื่อ-นามสกุลผู้ขอเบิก</label>
+                        <label class="block text-lg font-black text-slate-500 ml-2">ชื่อ-นามสกุลผู้ขอเบิก</label>
                         <input type="text" id="name" required placeholder="ระบุชื่อและนามสกุล" 
-                               class="w-full px-6 py-4 rounded-2xl bg-pink-50/50 text-slate-800 placeholder:text-slate-300">
+                               class="w-full px-6 py-5 rounded-2xl bg-pink-50/50 text-slate-800 placeholder:text-slate-300 text-xl">
                     </div>
                     
-                    <div class="grid grid-cols-1 gap-6">
+                    <div class="grid grid-cols-1 gap-8">
                         <div class="space-y-2">
-                            <label class="block text-sm font-bold text-slate-400 ml-1">รายการวัสดุ</label>
+                            <label class="block text-lg font-black text-slate-500 ml-2">รายการวัสดุ</label>
                             <div class="relative">
-                                <select id="item" required class="w-full px-6 py-4 rounded-2xl bg-pink-50/50 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M7%2010L12%2015L17%2010%22%20stroke%3D%22%23f9a8d4%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E')] bg-[length:20px] bg-[right_1.25rem_center] bg-no-repeat">
+                                <select id="item" required class="w-full px-6 py-5 rounded-2xl bg-pink-50/50 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%22%20fill%3D%22none%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M7%2010L12%2015L17%2010%22%20stroke%3D%22%23f9a8d4%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E')] bg-[length:24px] bg-[right_1.5rem_center] bg-no-repeat text-xl">
                                     <option value="" disabled selected>เลือกรายการวัสดุ</option>
                                 </select>
                             </div>
                         </div>
                         <div class="space-y-2">
-                            <label class="block text-sm font-bold text-slate-400 ml-1">จำนวนที่เบิก</label>
+                            <label class="block text-lg font-black text-slate-500 ml-2">จำนวนที่เบิก</label>
                             <input type="number" id="quantity" min="1" required placeholder="0"
-                                   class="w-full px-6 py-4 rounded-2xl bg-pink-50/50 text-center font-bold text-xl text-pink-600">
+                                   class="w-full px-6 py-5 rounded-2xl bg-pink-50/50 text-center font-black text-3xl text-pink-600">
                         </div>
                     </div>
 
                     <div class="pt-4">
-                        <button type="submit" id="submitBtn" class="w-full bg-pink-400 hover:bg-pink-500 text-white font-bold py-5 rounded-[2rem] shadow-lg shadow-pink-100 transition-all flex justify-center items-center text-lg">
-                            <span>ยืนยันการเบิกวัสดุ</span>
+                        <button type="submit" id="submitBtn" class="w-full bg-pink-400 hover:bg-pink-500 text-white font-black py-6 rounded-[2.5rem] shadow-lg shadow-pink-100 transition-all flex justify-center items-center text-2xl">
+                            <span>ยืนยันการส่งข้อมูลเบิก</span>
                         </button>
                     </div>
                 </form>
@@ -144,56 +150,59 @@
 
         <!-- ================= PAGE 2: ADMIN ================= -->
         <div id="page-admin" class="w-full hidden animate-fade-in">
-            <div class="flex flex-col sm:flex-row justify-between items-end mb-8 px-4">
+            <div class="flex flex-col sm:flex-row justify-between items-end mb-8 px-6">
                 <div>
-                    <h2 class="text-3xl font-extrabold text-slate-800">จัดการคำขอเบิก</h2>
-                    <p class="text-pink-500 font-medium">รายการที่รอดำเนินการตรวจสอบ</p>
+                    <h2 class="text-4xl font-black text-slate-800 tracking-tight">รายการอนุมัติ</h2>
+                    <p class="text-pink-500 font-bold text-xl">ตรวจสอบคำขอเบิกวัสดุในระบบ</p>
                 </div>
-                <button onclick="refreshData()" class="mt-4 sm:mt-0 px-6 py-3 rounded-2xl bg-white text-pink-500 font-bold flex items-center hover:bg-pink-50 border border-pink-100 transition-all pastel-shadow">
+                <button onclick="refreshData()" class="mt-4 sm:mt-0 px-8 py-4 rounded-2xl bg-white text-pink-500 font-black text-lg flex items-center hover:bg-pink-50 border-2 border-pink-100 transition-all pastel-shadow">
                     รีเฟรชข้อมูล
                 </button>
             </div>
 
-            <div class="bg-white rounded-[2.5rem] pastel-shadow border border-pink-50 overflow-hidden mb-10">
+            <div class="bg-white rounded-[3rem] pastel-shadow border border-pink-50 overflow-hidden mb-12">
                 <div class="table-container overflow-x-auto">
-                    <table class="w-full text-left border-collapse min-w-[700px]">
+                    <table class="w-full text-left border-collapse min-w-[850px]">
                         <thead>
-                            <tr class="bg-pink-50/30 border-b border-pink-100 text-[11px] uppercase tracking-widest text-pink-400 font-bold">
-                                <th class="px-10 py-6">ข้อมูลเบื้องต้น</th>
-                                <th class="px-10 py-6">รายการ</th>
-                                <th class="px-10 py-6 text-center">สถานะ</th>
-                                <th class="px-10 py-6 text-right">การจัดการ</th>
+                            <tr class="bg-pink-50/30">
+                                <th class="px-10 py-8">ข้อมูลคำขอเบิก</th>
+                                <th class="px-10 py-8">รายการวัสดุ</th>
+                                <th class="px-10 py-8 text-center">สถานะ</th>
+                                <th class="px-10 py-8 text-right">การจัดการ</th>
                             </tr>
                         </thead>
-                        <tbody id="requestsBody" class="divide-y divide-pink-50/50"></tbody>
+                        <tbody id="requestsBody" class="divide-y divide-pink-50/50 text-lg"></tbody>
                     </table>
-                    <div id="emptyState" class="hidden text-center py-24 text-slate-300">
-                        <p class="text-lg font-medium">ไม่มีคำขอที่รอดำเนินการ</p>
+                    <div id="emptyState" class="hidden text-center py-28 text-slate-300">
+                        <p class="text-2xl font-black">ไม่มีคำขอที่รอดำเนินการ</p>
                     </div>
                 </div>
             </div>
 
             <!-- History Section -->
-            <div class="bg-slate-800 rounded-[3rem] p-10 text-white pastel-shadow overflow-hidden">
-                <div class="flex flex-col sm:flex-row justify-between items-center mb-8">
+            <div class="bg-slate-800 rounded-[3.5rem] p-12 text-white pastel-shadow overflow-hidden">
+                <div class="flex flex-col sm:flex-row justify-between items-center mb-10">
                     <div class="flex items-center">
-                        <div class="p-4 bg-white/5 rounded-3xl mr-5">
-                            <svg class="w-6 h-6 text-pink-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                        <div class="p-5 bg-white/10 rounded-3xl mr-6">
+                            <svg class="w-8 h-8 text-pink-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
                         </div>
-                        <h3 class="text-2xl font-bold">ประวัติการดำเนินการ</h3>
+                        <h3 class="text-3xl font-black">ประวัติการดำเนินการ</h3>
                     </div>
-                    <button onclick="printHistoryPDF()" class="mt-4 sm:mt-0 bg-pink-400 hover:bg-pink-300 text-white px-8 py-4 rounded-2xl font-bold transition-all flex items-center shadow-lg shadow-pink-900/20">
+                    <button onclick="printHistoryPDF()" class="mt-6 sm:mt-0 bg-pink-400 hover:bg-pink-300 text-white px-10 py-5 rounded-[2rem] font-black text-xl transition-all flex items-center shadow-2xl shadow-pink-900/30">
                         พิมพ์รายงาน PDF
                     </button>
                 </div>
-                <div class="table-container overflow-x-auto max-h-[500px]">
-                    <table class="w-full text-left border-collapse min-w-[600px]">
-                        <thead class="text-[10px] text-slate-500 uppercase font-bold border-b border-white/5">
+                <div class="table-container overflow-x-auto max-h-[600px]">
+                    <table class="w-full text-left border-collapse min-w-[700px]">
+                        <thead class="border-b border-white/10">
                             <tr>
-                                <th class="px-6 py-5">หมายเลข/เวลา</th><th class="px-6 py-5">ผู้เบิก</th><th class="px-6 py-5">รายการวัสดุ</th><th class="px-6 py-5 text-center">ผลการอนุมัติ</th>
+                                <th class="px-8 py-6 !text-slate-400 !text-sm !font-bold">หมายเลข/เวลา</th>
+                                <th class="px-8 py-6 !text-slate-400 !text-sm !font-bold">ผู้เบิก</th>
+                                <th class="px-8 py-6 !text-slate-400 !text-sm !font-bold">รายการ</th>
+                                <th class="px-8 py-6 !text-slate-400 !text-sm !font-bold text-center">ผลการอนุมัติ</th>
                             </tr>
                         </thead>
-                        <tbody id="historyBody" class="text-sm text-slate-400 divide-y divide-white/5"></tbody>
+                        <tbody id="historyBody" class="text-lg text-slate-400 divide-y divide-white/5 font-medium"></tbody>
                     </table>
                 </div>
             </div>
@@ -201,29 +210,29 @@
 
         <!-- ================= PAGE 3: DASHBOARD ================= -->
         <div id="page-dashboard" class="w-full hidden animate-fade-in">
-            <div class="flex flex-col sm:flex-row justify-between items-end mb-8 px-4">
+            <div class="flex flex-col sm:flex-row justify-between items-end mb-10 px-6">
                 <div>
-                    <h2 class="text-3xl font-extrabold text-slate-800">จัดการคลังสินค้า</h2>
-                    <p class="text-pink-500 font-medium">รายการวัสดุอุปกรณ์ทั้งหมดที่มีในระบบ</p>
+                    <h2 class="text-4xl font-black text-slate-800 tracking-tight">คลังสินค้าคงคลัง</h2>
+                    <p class="text-pink-500 font-bold text-xl">ตรวจสอบและบริหารจัดการวัสดุอุปกรณ์</p>
                 </div>
-                <button onclick="openAddItemModal()" class="mt-4 sm:mt-0 bg-pink-400 hover:bg-pink-500 text-white px-8 py-4 rounded-2xl font-bold shadow-lg shadow-pink-100 transition-all">
+                <button onclick="openAddItemModal()" class="mt-6 sm:mt-0 bg-pink-400 hover:bg-pink-500 text-white px-10 py-5 rounded-[2.2rem] font-black text-xl shadow-xl shadow-pink-100 transition-all">
                     + เพิ่มวัสดุใหม่
                 </button>
             </div>
             
-            <div class="bg-white rounded-[2.5rem] pastel-shadow border border-pink-50 overflow-hidden">
+            <div class="bg-white rounded-[3rem] pastel-shadow border border-pink-50 overflow-hidden">
                 <div class="table-container overflow-x-auto">
-                    <table class="w-full text-left border-collapse min-w-[700px]">
+                    <table class="w-full text-left border-collapse min-w-[850px]">
                         <thead>
-                            <tr class="bg-pink-50/30 border-b border-pink-100 text-[11px] uppercase tracking-widest text-pink-400 font-bold">
-                                <th class="px-10 py-8">ชื่อรายการ</th>
-                                <th class="px-10 py-8 text-center">คงเหลือ</th>
-                                <th class="px-10 py-8 text-center">จุดแจ้งเตือน</th>
-                                <th class="px-10 py-8 text-center">สถานะ</th>
-                                <th class="px-10 py-8 text-right">จัดการข้อมูล</th>
+                            <tr class="bg-pink-50/30">
+                                <th class="px-10 py-10">ชื่อรายการวัสดุ</th>
+                                <th class="px-10 py-10 text-center">คงเหลือ</th>
+                                <th class="px-10 py-10 text-center">จุดเตือน</th>
+                                <th class="px-10 py-10 text-center">สถานะ</th>
+                                <th class="px-10 py-10 text-right">จัดการ</th>
                             </tr>
                         </thead>
-                        <tbody id="inventoryBody" class="divide-y divide-pink-50/50"></tbody>
+                        <tbody id="inventoryBody" class="divide-y divide-pink-50/50 text-xl font-bold"></tbody>
                     </table>
                 </div>
             </div>
@@ -232,7 +241,6 @@
     </main>
 
     <script>
-        // API Configuration
         const API_URL = "https://script.google.com/macros/s/AKfycbzXe2i0cqWqj8Xe4sd5HOj4czk231hkwyBzQNC9zm9Wd0Gbtu6ZJCjJ731r4DJnYoPC/exec"; 
         const ADMIN_NAME = "Medical Center Admin";
         const ADMIN_PASSWORD = "1234";
@@ -240,7 +248,6 @@
         
         let globalData = { inventory: [], requests: [] };
 
-        // Helper: Thai Date Formatter
         function formatThaiTime(dateString) {
             if (!dateString) return "-";
             const d = new Date(dateString);
@@ -268,7 +275,7 @@
         }
 
         async function refreshData(showLoading = true) {
-            if(showLoading) Swal.fire({ title: 'กำลังดึงข้อมูลจากคลาวด์...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+            if(showLoading) Swal.fire({ title: 'กำลังดึงข้อมูลล่าสุด...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
             try {
                 const res = await callAPI('getData');
                 if(res.status === 'success') {
@@ -280,14 +287,14 @@
                     Swal.fire('Error', res.message, 'error');
                 }
             } catch (e) {
-                Swal.fire('Connection Error', 'ไม่สามารถติดต่อฐานข้อมูลได้', 'error');
+                Swal.fire('Connection Error', 'ไม่สามารถเชื่อมต่อฐานข้อมูลได้', 'error');
             }
         }
 
         async function switchTab(tabId) {
             if ((tabId === 'admin' || tabId === 'dashboard') && !isAdminLoggedIn) {
                 const { value: password } = await Swal.fire({
-                    title: '🔒 ยืนยันรหัสผ่าน',
+                    title: '🔓 ยืนยันรหัสผ่าน',
                     text: 'กรุณากรอกรหัสผ่านเพื่อเข้าใช้งานส่วนแอดมิน',
                     input: 'password',
                     inputPlaceholder: 'Password',
@@ -312,11 +319,11 @@
                 const btn = document.getElementById(`btn-tab-${t}`);
                 el.classList.add('hidden');
                 el.classList.remove('block');
-                btn.className = "flex-1 sm:flex-none flex items-center justify-center px-5 py-2.5 rounded-xl text-sm font-bold glass-btn text-slate-400 hover:text-pink-500";
+                btn.className = "flex-1 sm:flex-none flex items-center justify-center px-6 py-3 rounded-xl text-base font-bold glass-btn text-slate-400 hover:text-pink-500";
             });
 
             const currentBtn = document.getElementById(`btn-tab-${tabId}`);
-            currentBtn.className = "flex-1 sm:flex-none flex items-center justify-center px-5 py-2.5 rounded-xl text-sm font-bold glass-btn bg-white text-pink-500 shadow-sm border border-pink-100";
+            currentBtn.className = "flex-1 sm:flex-none flex items-center justify-center px-6 py-3 rounded-xl text-base font-bold glass-btn bg-white text-pink-500 shadow-sm border border-pink-100";
             
             document.getElementById(`page-${tabId}`).classList.remove('hidden');
             document.getElementById(`page-${tabId}`).classList.add('block');
@@ -341,9 +348,9 @@
                 lowItems.sort((a,b) => a.stock - b.stock).forEach(item => {
                     const isOut = item.stock <= 0;
                     list.innerHTML += `
-                        <li class="flex justify-between items-center py-2 px-4 bg-white/70 rounded-2xl mb-1 last:mb-0 border border-rose-100/50">
-                            <span class="font-bold ${isOut ? 'text-rose-600' : 'text-rose-700'} text-[12px]">${item.name}</span> 
-                            <span class="px-2 py-0.5 rounded-lg font-extrabold text-[9px] ${isOut ? 'bg-rose-100 text-rose-600' : 'bg-rose-100 text-rose-600'} uppercase">${isOut ? 'Out' : 'Low'}: ${item.stock}</span>
+                        <li class="flex justify-between items-center py-3 px-5 bg-white/70 rounded-2xl mb-2 border border-rose-100/50">
+                            <span class="font-bold ${isOut ? 'text-rose-600' : 'text-rose-700'} text-lg">${item.name}</span> 
+                            <span class="px-2 py-0.5 rounded-lg font-extrabold text-[10px] ${isOut ? 'bg-rose-100 text-rose-600' : 'bg-rose-100 text-rose-600'} uppercase">${isOut ? 'Out' : 'Low'}: ${item.stock}</span>
                         </li>`;
                 });
                 container.classList.remove('hidden');
@@ -404,39 +411,39 @@
                     tbody.innerHTML += `
                         <tr class="hover:bg-pink-50/30 transition-colors">
                             <td class="px-10 py-8">
-                                <div class="font-extrabold text-slate-800 text-lg">${req.id}</div>
-                                <div class="text-[10px] text-pink-400 font-bold mt-1">${time}</div>
-                                <div class="mt-4 text-slate-500 font-medium flex items-center">
-                                    <div class="w-10 h-10 rounded-2xl bg-pink-100 text-pink-600 flex items-center justify-center mr-3 text-sm font-black border border-pink-200">
+                                <div class="font-extrabold text-slate-800 text-2xl">${req.id}</div>
+                                <div class="text-sm text-pink-400 font-bold mt-2">${time}</div>
+                                <div class="mt-5 text-slate-600 font-bold flex items-center">
+                                    <div class="w-12 h-12 rounded-2xl bg-pink-100 text-pink-500 flex items-center justify-center mr-4 text-lg font-black border-2 border-pink-200">
                                         ${req.name.charAt(0)}
                                     </div>
                                     ${req.name}
                                 </div>
                             </td>
                             <td class="px-10 py-8">
-                                <div class="text-slate-700 font-bold">${req.item}</div>
-                                <div class="inline-flex mt-2 px-3 py-1 rounded-xl bg-pink-50 text-pink-500 font-black text-xs border border-pink-100">
+                                <div class="text-slate-800 font-black text-xl">${req.item}</div>
+                                <div class="inline-flex mt-3 px-4 py-1.5 rounded-xl bg-pink-50 text-pink-500 font-black text-xs border border-pink-100">
                                     จำนวน ${req.qty} หน่วย
                                 </div>
                             </td>
                             <td class="px-10 py-8 text-center">
-                                <span class="bg-amber-50 text-amber-500 px-4 py-1.5 rounded-full text-[9px] font-black border border-amber-100">PENDING</span>
+                                <span class="bg-amber-100 text-amber-600 px-5 py-2 rounded-full text-xs font-black border-2 border-amber-200 uppercase tracking-widest">Pending</span>
                             </td>
                             <td class="px-10 py-8 text-right">
-                                <div class="flex justify-end space-x-3">
-                                    <button onclick="processRequest('${req.id}', 'อนุมัติแล้ว')" class="bg-pink-400 hover:bg-pink-500 text-white px-6 py-2.5 rounded-2xl text-xs font-black shadow-lg shadow-pink-100 glass-btn">อนุมัติ</button>
-                                    <button onclick="processRequest('${req.id}', 'ไม่อนุมัติ')" class="bg-white text-rose-400 hover:bg-rose-50 px-6 py-2.5 rounded-2xl text-xs font-black border border-rose-100 glass-btn">ไม่อนุมัติ</button>
+                                <div class="flex justify-end space-x-4">
+                                    <button onclick="processRequest('${req.id}', 'อนุมัติแล้ว')" class="bg-pink-400 hover:bg-pink-500 text-white px-8 py-3.5 rounded-2xl text-base font-black shadow-lg shadow-pink-100 glass-btn">อนุมัติ</button>
+                                    <button onclick="processRequest('${req.id}', 'ไม่อนุมัติ')" class="bg-white text-rose-500 hover:bg-rose-50 px-8 py-3.5 rounded-2xl text-base font-black border-2 border-rose-100 glass-btn">ปฏิเสธ</button>
                                 </div>
                             </td>
                         </tr>`;
                 } else {
-                    let badge = req.status === "อนุมัติแล้ว" ? `<span class="text-pink-300 font-black">APPROVED</span>` : `<span class="text-rose-400 font-black">REJECTED</span>`;
+                    let badge = req.status === "อนุมัติแล้ว" ? `<span class="text-pink-400 font-black">APPROVED</span>` : `<span class="text-rose-500 font-black">REJECTED</span>`;
                     historyBody.innerHTML += `
                         <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
-                            <td class="px-6 py-6"><span class="font-black text-white">${req.id}</span><br><span class="text-[9px] text-slate-600">${time}</span></td>
-                            <td class="px-6 py-6 font-medium text-slate-300">${req.name}</td>
-                            <td class="px-6 py-6 text-slate-400"><span class="text-pink-400 font-bold">${req.item}</span> (x${req.qty})</td>
-                            <td class="px-6 py-6 text-center text-[10px]">${badge}</td>
+                            <td class="px-8 py-8"><span class="font-black text-white text-xl">${req.id}</span><br><span class="text-xs text-slate-500 mt-1 block">${time}</span></td>
+                            <td class="px-8 py-8 font-bold text-slate-300">${req.name}</td>
+                            <td class="px-8 py-8 text-slate-400 font-bold"><span class="text-pink-400 font-extrabold">${req.item}</span> (x${req.qty})</td>
+                            <td class="px-8 py-8 text-center">${badge}</td>
                         </tr>`;
                 }
             });
@@ -448,7 +455,7 @@
             const item = globalData.inventory.find(i => i.name === req.item);
             if (status === 'อนุมัติแล้ว' && item && item.stock < req.qty) return Swal.fire('Error', 'ไม่สามารถอนุมัติได้: วัสดุในคลังไม่เพียงพอ', 'error');
 
-            Swal.fire({ title: 'กำลังบันทึก...', didOpen: () => Swal.showLoading() });
+            Swal.fire({ title: 'กำลังประมวลผล...', didOpen: () => Swal.showLoading() });
             const res = await callAPI('updateStatus', { id: id, status: status, adminName: ADMIN_NAME });
             if(res.status === 'success') {
                 await Swal.fire({ icon: 'success', title: 'ดำเนินการเรียบร้อย', timer: 1000, showConfirmButton: false });
@@ -462,22 +469,22 @@
             [...globalData.inventory].sort((a,b) => a.name.localeCompare(b.name)).forEach(item => {
                 const isLow = item.stock <= item.threshold;
                 const statusBadge = isLow 
-                    ? `<span class="bg-rose-50 text-rose-500 border border-rose-100 px-4 py-1.5 rounded-full text-[9px] font-black">LOW STOCK</span>` 
-                    : `<span class="bg-pink-50 text-pink-500 border border-pink-100 px-4 py-1.5 rounded-full text-[9px] font-black">HEALTHY</span>`;
+                    ? `<span class="bg-rose-50 text-rose-500 border-2 border-rose-100 px-5 py-2 rounded-full text-[10px] font-black tracking-widest">LOW STOCK</span>` 
+                    : `<span class="bg-pink-50 text-pink-500 border-2 border-pink-100 px-5 py-2 rounded-full text-[10px] font-black tracking-widest">HEALTHY</span>`;
                 
                 tbody.innerHTML += `
                     <tr class="${isLow ? 'bg-rose-50/20' : ''} hover:bg-pink-50/30 transition-colors">
-                        <td class="px-10 py-8 font-black text-slate-700 text-lg">${item.name}</td>
-                        <td class="px-10 py-8 text-center">
-                            <span class="text-2xl font-black ${isOut(item) ? 'text-rose-500' : (isLow ? 'text-rose-400' : 'text-slate-800')}">${item.stock}</span>
+                        <td class="px-10 py-10 font-black text-slate-800 text-2xl">${item.name}</td>
+                        <td class="px-10 py-10 text-center">
+                            <span class="text-4xl font-black ${item.stock <= 0 ? 'text-rose-600' : (isLow ? 'text-rose-500' : 'text-slate-900')}">${item.stock}</span>
                         </td>
-                        <td class="px-10 py-8 text-center text-slate-300 font-bold">${item.threshold}</td>
-                        <td class="px-10 py-8 text-center">${statusBadge}</td>
-                        <td class="px-10 py-8 text-right">
+                        <td class="px-10 py-10 text-center text-slate-300 font-bold text-xl">${item.threshold}</td>
+                        <td class="px-10 py-10 text-center">${statusBadge}</td>
+                        <td class="px-10 py-10 text-right">
                             <div class="flex justify-end space-x-3">
-                                <button onclick="restockItem('${item.name}')" class="bg-pink-400 hover:bg-pink-500 text-white px-5 py-3 rounded-2xl text-xs font-black glass-btn shadow-lg shadow-pink-100">เติมวัสดุ</button>
-                                <button onclick="editItem('${item.name}')" class="bg-slate-100 text-slate-400 p-3 rounded-2xl hover:bg-pink-100 hover:text-pink-500 glass-btn" title="แก้ไข">✏️</button>
-                                <button onclick="deleteItem('${item.name}')" class="bg-rose-50 text-rose-300 p-3 rounded-2xl hover:bg-rose-500 hover:text-white glass-btn" title="ลบ">🗑️</button>
+                                <button onclick="restockItem('${item.name}')" class="bg-pink-400 hover:bg-pink-500 text-white px-6 py-3.5 rounded-2xl text-sm font-black glass-btn shadow-lg shadow-pink-100">เติมวัสดุ</button>
+                                <button onclick="editItem('${item.name}')" class="bg-slate-100 text-slate-400 p-4 rounded-2xl hover:bg-pink-100 hover:text-pink-500 glass-btn" title="แก้ไข">✏️</button>
+                                <button onclick="deleteItem('${item.name}')" class="bg-rose-50 text-rose-300 p-4 rounded-2xl hover:bg-rose-500 hover:text-white glass-btn" title="ลบ">🗑️</button>
                             </div>
                         </td>
                     </tr>`;
@@ -492,16 +499,16 @@
                 title: 'แก้ไขข้อมูลวัสดุ',
                 html: `
                     <div class="space-y-5 pt-6 pb-2">
-                        <div class="text-left px-1"><label class="text-[10px] font-black text-pink-400 uppercase tracking-widest">รายการ</label></div>
-                        <input id="e-n" class="swal2-input !mt-0 !w-full !rounded-2xl" value="${item.name}">
+                        <div class="text-left px-2"><label class="text-[10px] font-black text-pink-400 uppercase tracking-widest">ชื่อรายการ</label></div>
+                        <input id="e-n" class="swal2-input !mt-0 !w-full !rounded-2xl !py-5" value="${item.name}">
                         <div class="grid grid-cols-2 gap-5">
                             <div>
-                                <div class="text-left px-1"><label class="text-[10px] font-black text-pink-400 uppercase tracking-widest">จำนวนคงเหลือ</label></div>
-                                <input id="e-s" type="number" class="swal2-input !mt-0 !w-full !rounded-2xl" value="${item.stock}">
+                                <div class="text-left px-2"><label class="text-[10px] font-black text-pink-400 uppercase tracking-widest">คงเหลือ</label></div>
+                                <input id="e-s" type="number" class="swal2-input !mt-0 !w-full !rounded-2xl !py-5 text-center font-bold" value="${item.stock}">
                             </div>
                             <div>
-                                <div class="text-left px-1"><label class="text-[10px] font-black text-pink-400 uppercase tracking-widest">จุดแจ้งเตือน</label></div>
-                                <input id="e-t" type="number" class="swal2-input !mt-0 !w-full !rounded-2xl" value="${item.threshold}">
+                                <div class="text-left px-2"><label class="text-[10px] font-black text-pink-400 uppercase tracking-widest">จุดเตือน</label></div>
+                                <input id="e-t" type="number" class="swal2-input !mt-0 !w-full !rounded-2xl !py-5 text-center font-bold" value="${item.threshold}">
                             </div>
                         </div>
                     </div>
@@ -555,10 +562,10 @@
                 title: 'เพิ่มรายการใหม่',
                 html: `
                     <div class="space-y-5 pt-6 pb-2">
-                        <input id="i-n" class="swal2-input !mt-0 !w-full !rounded-2xl" placeholder="ระบุชื่อวัสดุอุปกรณ์">
+                        <input id="i-n" class="swal2-input !mt-0 !w-full !rounded-2xl !py-5" placeholder="ระบุชื่อวัสดุอุปกรณ์">
                         <div class="grid grid-cols-2 gap-5">
-                            <input id="i-s" type="number" class="swal2-input !mt-0 !w-full !rounded-2xl" placeholder="จำนวนเริ่มต้น">
-                            <input id="i-t" type="number" class="swal2-input !mt-0 !w-full !rounded-2xl" placeholder="จุดแจ้งเตือน">
+                            <input id="i-s" type="number" class="swal2-input !mt-0 !w-full !rounded-2xl !py-5" placeholder="จำนวนเริ่มต้น">
+                            <input id="i-t" type="number" class="swal2-input !mt-0 !w-full !rounded-2xl !py-5" placeholder="จุดแจ้งเตือน">
                         </div>
                     </div>
                 `,
@@ -580,12 +587,12 @@
             [...history].reverse().forEach((req, i) => {
                 rows += `
                     <tr>
-                        <td style="text-align:center; color:#94a3b8">${i+1}</td>
-                        <td><strong>${req.id}</strong><br><small style="color:#f472b6">${formatThaiTime(req.timestamp)}</small></td>
-                        <td>${req.name}</td>
-                        <td>${req.item}</td>
-                        <td style="text-align:center; font-weight:bold; color:#ec4899">x${req.qty}</td>
-                        <td style="text-align:center; font-weight:900; color:${req.status === 'อนุมัติแล้ว' ? '#ec4899' : '#f43f5e'}">${req.status === 'อนุมัติแล้ว' ? 'APPROVED' : 'REJECTED'}</td>
+                        <td style="text-align:center; color:#94a3b8; padding: 15px;">${i+1}</td>
+                        <td style="padding: 15px;"><strong>${req.id}</strong><br><small style="color:#f472b6">${formatThaiTime(req.timestamp)}</small></td>
+                        <td style="padding: 15px;">${req.name}</td>
+                        <td style="padding: 15px;">${req.item}</td>
+                        <td style="text-align:center; font-weight:bold; color:#ec4899; padding: 15px;">x${req.qty}</td>
+                        <td style="text-align:center; font-weight:900; color:${req.status === 'อนุมัติแล้ว' ? '#ec4899' : '#f43f5e'}; padding: 15px;">${req.status === 'อนุมัติแล้ว' ? 'APPROVED' : 'REJECTED'}</td>
                     </tr>`;
             });
             const win = window.open('', '_blank');
@@ -597,16 +604,16 @@
                     <style>
                         body { font-family: 'Sarabun', sans-serif; padding: 50px; color: #334155; }
                         header { text-align: center; margin-bottom: 50px; }
-                        h2 { margin: 0; color: #0f172a; font-weight: 800; font-size: 24px; text-transform: uppercase; letter-spacing: 1px; }
+                        h2 { margin: 0; color: #0f172a; font-weight: 800; font-size: 28px; text-transform: uppercase; letter-spacing: 1px; }
                         table { width: 100%; border-collapse: collapse; margin-top: 30px; }
-                        th, td { border-bottom: 1px solid #f1f5f9; padding: 18px 12px; font-size: 13px; text-align: left; }
-                        th { color: #94a3b8; font-weight: bold; text-transform: uppercase; font-size: 10px; letter-spacing: 0.1em; background: #f8fafc; }
+                        th, td { border-bottom: 1px solid #f1f5f9; padding: 18px 12px; font-size: 16px; text-align: left; }
+                        th { color: #f472b6; font-weight: bold; text-transform: uppercase; font-size: 13px; letter-spacing: 0.1em; background: #fff1f2; }
                     </style>
                 </head>
                 <body>
                     <header>
                         <h2>สรุปประวัติการเบิกจ่ายวัสดุอุปกรณ์</h2>
-                        <p style="color: #f472b6; font-weight: bold; margin-top: 10px; font-size: 12px;">พิมพ์เมื่อ: ${new Date().toLocaleString('th-TH')}</p>
+                        <p style="color: #f472b6; font-weight: bold; margin-top: 10px; font-size: 14px;">พิมพ์เมื่อ: ${new Date().toLocaleString('th-TH')}</p>
                     </header>
                     <table>
                         <thead>
