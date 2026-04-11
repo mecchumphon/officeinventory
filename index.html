@@ -42,7 +42,6 @@
 
     <main class="flex-grow p-4 sm:p-6 lg:p-8 flex justify-center">
 
-        <!-- ================= PAGE 1: USER ================= -->
         <div id="page-user" class="w-full max-w-md w-full animate-fade-in block">
             <div class="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
                 <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-8 text-center">
@@ -50,7 +49,6 @@
                     <p class="text-blue-100 text-sm">กรอกข้อมูลให้ครบถ้วนเพื่อส่งคำขอ</p>
                 </div>
                 
-                <!-- Dashboard แจ้งเตือนของใกล้หมดสำหรับ User -->
                 <div id="lowStockAlertContainer" class="px-6 pt-5 hidden">
                     <div class="bg-rose-50 border border-rose-200 rounded-lg p-4 shadow-sm">
                         <h3 class="text-sm font-bold text-rose-800 mb-3 flex items-center">
@@ -58,8 +56,7 @@
                             รายการวัสดุที่ใกล้หมด / หมดสต๊อก
                         </h3>
                         <ul id="lowStockList" class="text-sm text-rose-700 space-y-2">
-                            <!-- JS จะดึงข้อมูลมาแสดงที่นี่ -->
-                        </ul>
+                            </ul>
                     </div>
                 </div>
 
@@ -67,17 +64,6 @@
                     <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-1">ชื่อ-นามสกุลผู้เบิก</label>
                         <input type="text" id="name" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-slate-700 mb-1">แผนก</label>
-                        <select id="department" required class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none text-sm bg-white">
-                            <option value="" disabled selected>-- เลือกแผนก --</option>
-                            <option value="IT">IT (เทคโนโลยีสารสนเทศ)</option>
-                            <option value="HR">HR (ฝ่ายบุคคล)</option>
-                            <option value="บัญชี">บัญชีและการเงิน</option>
-                            <option value="ธุรการ">ธุรการ</option>
-                            <option value="การตลาด">การตลาด</option>
-                        </select>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-1">รายการวัสดุ</label>
@@ -98,7 +84,6 @@
             </div>
         </div>
 
-        <!-- ================= PAGE 2: ADMIN ================= -->
         <div id="page-admin" class="w-full max-w-5xl hidden animate-fade-in">
             <h2 class="text-2xl font-bold text-slate-800 mb-4">🛠️ แผงควบคุมผู้ดูแลระบบ</h2>
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-6">
@@ -122,12 +107,11 @@
                 </div>
             </div>
 
-            <!-- ประวัติการเบิก -->
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                 <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 cursor-pointer flex justify-between items-center" onclick="document.getElementById('historyContent').classList.toggle('hidden')">
                     <h3 class="text-sm font-bold text-slate-600">ประวัติการดำเนินการ (คลิกเพื่อแสดง/ซ่อน)</h3>
                     <button onclick="event.stopPropagation(); printHistoryPDF()" class="bg-indigo-50 text-indigo-600 hover:bg-indigo-100 px-3 py-1.5 rounded text-sm font-semibold border border-indigo-200 shadow-sm flex items-center transition-colors" title="พิมพ์รายงานเป็น PDF">
-                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                         พิมพ์รายงาน (PDF)
                     </button>
                 </div>
@@ -144,7 +128,6 @@
             </div>
         </div>
 
-        <!-- ================= PAGE 3: DASHBOARD ================= -->
         <div id="page-dashboard" class="w-full max-w-5xl hidden animate-fade-in">
             <div class="mb-6 flex justify-between items-center">
                 <h2 class="text-2xl font-bold text-slate-800">📦 คลังสินค้า (Inventory)</h2>
@@ -184,12 +167,8 @@
         
         let globalData = { inventory: [], requests: [] };
 
-        // ============================================================================
-        // 2. ฟังก์ชันหลักสำหรับเรียก API ข้ามโดเมนไปหา Google Apps Script
-        // ============================================================================
         async function callAPI(action, payload = {}) {
             try {
-                // ส่งเป็น text/plain เพื่อหลีกเลี่ยง CORS Preflight บนเบราว์เซอร์
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -202,9 +181,6 @@
             }
         }
 
-        // ============================================================================
-        // 3. ฟังก์ชันดึงข้อมูลทั้งหมดจากระบบ
-        // ============================================================================
         async function refreshData(showLoading = true) {
             if(showLoading) Swal.fire({ title: 'กำลังโหลดข้อมูล...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
             
@@ -213,7 +189,7 @@
                 if(res.status === 'success') {
                     globalData.inventory = res.inventory;
                     globalData.requests = res.requests;
-                    renderUI(); // อัปเดตหน้าจอทั้งหมด
+                    renderUI();
                     if(showLoading) Swal.close();
                 } else {
                     Swal.fire('ข้อผิดพลาด', res.message, 'error');
@@ -223,11 +199,7 @@
             }
         }
 
-        // ============================================================================
-        // 4. การจัดการ UI
-        // ============================================================================
         async function switchTab(tabId) {
-            // ระบบตรวจสอบรหัสผ่านสำหรับหน้า Admin และ Dashboard
             if ((tabId === 'admin' || tabId === 'dashboard') && !isAdminLoggedIn) {
                 const { value: password } = await Swal.fire({
                     title: '🔒 ยืนยันตัวตน',
@@ -249,10 +221,10 @@
                         await Swal.fire({ icon: 'success', title: 'เข้าสู่ระบบสำเร็จ', timer: 1000, showConfirmButton: false });
                     } else {
                         Swal.fire({ icon: 'error', title: 'รหัสผ่านไม่ถูกต้อง!', text: 'กรุณาลองใหม่อีกครั้ง' });
-                        return; // หยุดการทำงาน ไม่สลับหน้า
+                        return;
                     }
                 } else {
-                    return; // กรณีพับหน้าต่างหรือกดยกเลิก
+                    return; 
                 }
             }
 
@@ -273,23 +245,20 @@
         }
 
         function renderUI() {
-            loadUserStockAlert(); // เพิ่มการโหลดแจ้งเตือน
+            loadUserStockAlert();
             loadUserDropdown();
             loadAdminTable();
             loadDashboard();
         }
 
-        // ฟังก์ชันใหม่: โหลดการแจ้งเตือนของหมดในหน้า User
         function loadUserStockAlert() {
             const container = document.getElementById('lowStockAlertContainer');
             const list = document.getElementById('lowStockList');
             list.innerHTML = '';
             
-            // กรองเฉพาะรายการที่เหลือน้อยกว่าหรือเท่ากับ Threshold
             const lowItems = globalData.inventory.filter(item => item.stock <= item.threshold);
             
             if (lowItems.length > 0) {
-                // เรียงลำดับเอาที่น้อยที่สุดขึ้นก่อน
                 lowItems.sort((a,b) => a.stock - b.stock).forEach(item => {
                     const isOut = item.stock <= 0;
                     const badgeClass = isOut ? 'bg-rose-200 text-rose-800' : 'bg-orange-200 text-orange-800';
@@ -330,7 +299,6 @@
             const reqQty = parseInt(document.getElementById('quantity').value);
             const selectedItemName = document.getElementById('item').value;
             
-            // เพิ่มการตรวจสอบ: ไม่ให้เบิกเกินสต๊อกที่มีอยู่
             const itemData = globalData.inventory.find(i => i.name === selectedItemName);
             if (itemData && reqQty > itemData.stock) {
                 Swal.fire({
@@ -339,12 +307,12 @@
                     text: `คุณขอเบิก ${reqQty} แต่ "${selectedItemName}" มีเหลือเพียง ${itemData.stock} เท่านั้น`
                 });
                 btn.disabled = false; btn.innerHTML = '<span>ส่งคำขอเบิก</span>';
-                return; // หยุดการส่งข้อมูล
+                return;
             }
             
             const formData = {
                 name: document.getElementById('name').value,
-                dept: document.getElementById('department').value,
+                dept: "-", // ส่งค่าเป็นขีด (-) เพื่อรักษารูปแบบตารางชีตเดิมไว้ ไม่ให้รวน
                 item: selectedItemName,
                 qty: reqQty
             };
@@ -354,7 +322,7 @@
                 if(res.status === 'success') {
                     Swal.fire({ icon: 'success', title: 'สำเร็จ!', text: `รหัสคำขอของคุณคือ: ${res.id}` });
                     form.reset();
-                    refreshData(false); // อัปเดตข้อมูลเบื้องหลัง
+                    refreshData(false);
                 } else {
                     Swal.fire('ล้มเหลว', res.message, 'error');
                 }
@@ -376,7 +344,7 @@
                     pendingCount++;
                     tbody.innerHTML += `
                         <tr class="hover:bg-slate-50 border-b border-slate-100">
-                            <td class="px-6 py-4"><div class="font-bold">${req.id}</div><div class="text-xs">${req.timestamp}</div><div class="mt-1">${req.name} <span class="text-xs bg-slate-100 px-1 rounded">${req.dept}</span></div></td>
+                            <td class="px-6 py-4"><div class="font-bold">${req.id}</div><div class="text-xs">${req.timestamp}</div><div class="mt-1">${req.name}</div></td>
                             <td class="px-6 py-4">${req.item}<div class="text-blue-600 font-bold mt-1">จำนวน: ${req.qty}</div></td>
                             <td class="px-6 py-4 text-center"><span class="bg-amber-100 text-amber-800 px-2 rounded-full text-xs">รอพิจารณา</span></td>
                             <td class="px-6 py-4 text-right">
@@ -393,9 +361,7 @@
             document.getElementById('emptyState').style.display = pendingCount === 0 ? 'block' : 'none';
         }
 
-        // ฟังก์ชันใหม่: พิมพ์รายงานประวัติการเบิกจ่าย
         function printHistoryPDF() {
-            // ดึงเฉพาะรายการที่มีการดำเนินการแล้ว (อนุมัติ/ปฏิเสธ)
             const processedHistory = globalData.requests.filter(req => req.status !== "รออนุมัติ");
 
             if (processedHistory.length === 0) {
@@ -403,7 +369,6 @@
                 return;
             }
 
-            // สร้างโครงสร้างหน้าเว็บใหม่สำหรับการพิมพ์
             let printContents = `
                 <html>
                 <head>
@@ -438,8 +403,7 @@
                             <tr>
                                 <th style="width: 5%">ลำดับ</th>
                                 <th style="width: 15%">รหัสคำขอ / วันที่</th>
-                                <th style="width: 20%">ผู้เบิก (แผนก)</th>
-                                <th style="width: 35%">รายการวัสดุ</th>
+                                <th style="width: 20%">ผู้เบิก</th> <th style="width: 35%">รายการวัสดุ</th>
                                 <th style="width: 10%">จำนวน</th>
                                 <th style="width: 15%">สถานะ</th>
                             </tr>
@@ -447,7 +411,6 @@
                         <tbody>
             `;
 
-            // วนลูปสร้างแถวข้อมูล (เรียงจากล่าสุดไปเก่าสุด)
             [...processedHistory].reverse().forEach((req, index) => {
                 const statusClass = req.status === "อนุมัติแล้ว" ? "status-approve" : "status-reject";
                 printContents += `
@@ -458,9 +421,7 @@
                             <span class="sub-text">${req.timestamp}</span>
                         </td>
                         <td>
-                            ${req.name}
-                            <span class="sub-text">แผนก: ${req.dept}</span>
-                        </td>
+                            ${req.name} </td>
                         <td>${req.item}</td>
                         <td class="text-center qty">x${req.qty}</td>
                         <td class="text-center ${statusClass}">
@@ -482,12 +443,10 @@
                 </html>
             `;
 
-            // เปิดหน้าต่างใหม่แล้วสั่งพิมพ์
             const printWindow = window.open('', '_blank');
             printWindow.document.write(printContents);
             printWindow.document.close();
             
-            // หน่วงเวลาเล็กน้อยเพื่อให้เบราว์เซอร์โหลดฟอนต์ Sarabun ทันก่อนสั่งพิมพ์
             setTimeout(() => {
                 printWindow.focus();
                 printWindow.print();
