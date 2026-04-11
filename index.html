@@ -42,6 +42,7 @@
 
     <main class="flex-grow p-4 sm:p-6 lg:p-8 flex justify-center">
 
+        <!-- ================= PAGE 1: USER ================= -->
         <div id="page-user" class="w-full max-w-md w-full animate-fade-in block">
             <div class="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
                 <div class="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-8 text-center">
@@ -55,8 +56,7 @@
                             <svg class="w-5 h-5 mr-1.5 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                             รายการวัสดุที่ใกล้หมด / หมดสต๊อก
                         </h3>
-                        <ul id="lowStockList" class="text-sm text-rose-700 space-y-2">
-                            </ul>
+                        <ul id="lowStockList" class="text-sm text-rose-700 space-y-2"></ul>
                     </div>
                 </div>
 
@@ -84,6 +84,7 @@
             </div>
         </div>
 
+        <!-- ================= PAGE 2: ADMIN ================= -->
         <div id="page-admin" class="w-full max-w-5xl hidden animate-fade-in">
             <h2 class="text-2xl font-bold text-slate-800 mb-4">🛠️ แผงควบคุมผู้ดูแลระบบ</h2>
             <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-6">
@@ -111,7 +112,7 @@
                 <div class="px-6 py-4 border-b border-slate-100 bg-slate-50 cursor-pointer flex justify-between items-center" onclick="document.getElementById('historyContent').classList.toggle('hidden')">
                     <h3 class="text-sm font-bold text-slate-600">ประวัติการดำเนินการ (คลิกเพื่อแสดง/ซ่อน)</h3>
                     <button onclick="event.stopPropagation(); printHistoryPDF()" class="bg-indigo-50 text-indigo-600 hover:bg-indigo-100 px-3 py-1.5 rounded text-sm font-semibold border border-indigo-200 shadow-sm flex items-center transition-colors" title="พิมพ์รายงานเป็น PDF">
-                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
                         พิมพ์รายงาน (PDF)
                     </button>
                 </div>
@@ -128,6 +129,7 @@
             </div>
         </div>
 
+        <!-- ================= PAGE 3: DASHBOARD ================= -->
         <div id="page-dashboard" class="w-full max-w-5xl hidden animate-fade-in">
             <div class="mb-6 flex justify-between items-center">
                 <h2 class="text-2xl font-bold text-slate-800">📦 คลังสินค้า (Inventory)</h2>
@@ -161,11 +163,29 @@
         const API_URL = "https://script.google.com/macros/s/AKfycbzXe2i0cqWqj8Xe4sd5HOj4czk231hkwyBzQNC9zm9Wd0Gbtu6ZJCjJ731r4DJnYoPC/exec"; 
         const ADMIN_NAME = "System Admin";
         
-        // --- เพิ่มการตั้งค่ารหัสผ่านตรงนี้ ---
-        const ADMIN_PASSWORD = "1234"; // เปลี่ยนรหัสผ่านตรงนี้
-        let isAdminLoggedIn = false;   // ตัวแปรเช็คสถานะการล็อกอิน
+        const ADMIN_PASSWORD = "1234";
+        let isAdminLoggedIn = false;
         
         let globalData = { inventory: [], requests: [] };
+
+        // ฟังก์ชันแปลงเวลาแบบ ISO (มี T มี Z) ให้เป็นเวลาไทยที่อ่านง่าย
+        function formatThaiTime(dateString) {
+            if (!dateString) return "-";
+            // ถ้าเวลาไม่ได้มีตัวอักษร T ติดมา แสดงว่าจัดรูปแบบมาจาก Google แล้ว ก็ส่งกลับไปเลย
+            if (typeof dateString === 'string' && !dateString.includes('T')) return dateString;
+
+            const d = new Date(dateString);
+            if (isNaN(d.getTime())) return dateString; // ป้องกันกรณีอ่านค่าเวลาไม่ได้
+
+            const day = String(d.getDate()).padStart(2, '0');
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const year = d.getFullYear(); 
+            const hours = String(d.getHours()).padStart(2, '0');
+            const minutes = String(d.getMinutes()).padStart(2, '0');
+            const seconds = String(d.getSeconds()).padStart(2, '0');
+
+            return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+        }
 
         async function callAPI(action, payload = {}) {
             try {
@@ -340,11 +360,14 @@
             let pendingCount = 0;
 
             [...globalData.requests].reverse().forEach(req => {
+                // แปลงเวลาก่อนนำไปแสดง
+                const displayTime = formatThaiTime(req.timestamp);
+                
                 if(req.status === "รออนุมัติ") {
                     pendingCount++;
                     tbody.innerHTML += `
                         <tr class="hover:bg-slate-50 border-b border-slate-100">
-                            <td class="px-6 py-4"><div class="font-bold">${req.id}</div><div class="text-xs">${req.timestamp}</div><div class="mt-1">${req.name}</div></td>
+                            <td class="px-6 py-4"><div class="font-bold">${req.id}</div><div class="text-xs text-slate-500">${displayTime}</div><div class="mt-1">${req.name}</div></td>
                             <td class="px-6 py-4">${req.item}<div class="text-blue-600 font-bold mt-1">จำนวน: ${req.qty}</div></td>
                             <td class="px-6 py-4 text-center"><span class="bg-amber-100 text-amber-800 px-2 rounded-full text-xs">รอพิจารณา</span></td>
                             <td class="px-6 py-4 text-right">
@@ -354,7 +377,7 @@
                         </tr>`;
                 } else {
                     let badge = req.status === "อนุมัติแล้ว" ? `<span class="text-emerald-600 text-xs font-bold">${req.status}</span>` : `<span class="text-rose-600 text-xs font-bold">${req.status}</span>`;
-                    historyBody.innerHTML += `<tr><td class="px-6 py-2 border-b border-slate-50">${req.id}</td><td class="px-6 py-2 border-b border-slate-50">${req.name}</td><td class="px-6 py-2 border-b border-slate-50">${req.item} <span class="text-blue-600 font-semibold">(x${req.qty})</span></td><td class="px-6 py-2 border-b border-slate-50">${badge}</td></tr>`;
+                    historyBody.innerHTML += `<tr><td class="px-6 py-2 border-b border-slate-50"><strong>${req.id}</strong><br><span class="text-xs text-slate-400">${displayTime}</span></td><td class="px-6 py-2 border-b border-slate-50">${req.name}</td><td class="px-6 py-2 border-b border-slate-50">${req.item} <span class="text-blue-600 font-semibold">(x${req.qty})</span></td><td class="px-6 py-2 border-b border-slate-50">${badge}</td></tr>`;
                 }
             });
 
@@ -402,8 +425,9 @@
                         <thead>
                             <tr>
                                 <th style="width: 5%">ลำดับ</th>
-                                <th style="width: 15%">รหัสคำขอ / วันที่</th>
-                                <th style="width: 20%">ผู้เบิก</th> <th style="width: 35%">รายการวัสดุ</th>
+                                <th style="width: 20%">รหัสคำขอ / วันที่</th>
+                                <th style="width: 20%">ผู้เบิก</th>
+                                <th style="width: 30%">รายการวัสดุ</th>
                                 <th style="width: 10%">จำนวน</th>
                                 <th style="width: 15%">สถานะ</th>
                             </tr>
@@ -413,15 +437,16 @@
 
             [...processedHistory].reverse().forEach((req, index) => {
                 const statusClass = req.status === "อนุมัติแล้ว" ? "status-approve" : "status-reject";
+                const displayTime = formatThaiTime(req.timestamp); // ใช้เวลาไทย
+                
                 printContents += `
                     <tr>
                         <td class="text-center">${index + 1}</td>
                         <td>
                             <strong>${req.id}</strong>
-                            <span class="sub-text">${req.timestamp}</span>
+                            <span class="sub-text">${displayTime}</span>
                         </td>
-                        <td>
-                            ${req.name} </td>
+                        <td>${req.name}</td>
                         <td>${req.item}</td>
                         <td class="text-center qty">x${req.qty}</td>
                         <td class="text-center ${statusClass}">
