@@ -15,200 +15,224 @@
 
     <style>
         :root {
-            --primary: #f472b6;
+            --primary: #f9a8d4;
+            --primary-dark: #f472b6;
             --primary-soft: #fdf2f8;
             --accent: #fce7f3;
         }
         body { 
             font-family: 'Sarabun', sans-serif; 
-            background: #f9fafb; /* เปลี่ยนพื้นหลังให้สว่างและสะอาดตาขึ้น */
-            background-image: radial-gradient(#fce7f3 1px, transparent 1px);
-            background-size: 20px 20px;
+            background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
             min-height: 100vh;
-            font-size: 16px;
+            font-size: 17px;
         }
-        .swal2-popup { font-family: 'Sarabun', sans-serif !important; border-radius: 1.5rem !important; }
+        .swal2-popup { font-family: 'Sarabun', sans-serif !important; border-radius: 2rem !important; }
         
-        .animate-fade-in { animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        .table-container::-webkit-scrollbar { height: 6px; width: 6px; }
+        .table-container::-webkit-scrollbar-track { background: transparent; }
+        .table-container::-webkit-scrollbar-thumb { background: #fbcfe8; border-radius: 10px; }
+        
+        .animate-fade-in { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
         .nav-card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
         }
 
-        /* ปรับเงาให้ดูบางและคมขึ้น */
-        .sleek-shadow {
-            box-shadow: 0 4px 20px -5px rgba(244, 114, 182, 0.15), 0 8px 15px -10px rgba(0, 0, 0, 0.05);
+        .pastel-shadow {
+            box-shadow: 0 15px 35px -8px rgba(251, 207, 232, 0.5);
         }
 
         .glass-btn {
-            @apply transition-all duration-200 active:scale-95 disabled:opacity-50;
+            @apply transition-all duration-300 active:scale-95 disabled:opacity-50;
         }
-
+        
         input, select {
-            @apply border border-slate-200 focus:border-pink-300 focus:ring-4 focus:ring-pink-50 transition-all outline-none;
+            @apply border-2 border-pink-50 focus:border-pink-300 focus:ring-4 focus:ring-pink-100 transition-all outline-none;
         }
 
-        /* ส่วนหัวตารางที่ปรับให้พอดี */
+        /* หัวตารางที่ชัดเจนและดูพรีเมียม */
         thead th {
-            @apply text-slate-500 font-bold uppercase tracking-wider py-4 px-6 text-sm border-b border-slate-100;
+            @apply text-pink-500 font-black uppercase tracking-wider py-6 px-8 text-base lg:text-lg border-b border-pink-100/50 bg-white/50;
         }
     </style>
 </head>
-<body class="text-slate-700 antialiased">
+<body class="text-slate-800 antialiased">
 
-    <!-- Sleek Navigation -->
-    <nav class="nav-card border-b border-pink-50 sticky top-0 z-50">
+    <!-- Premium Navigation -->
+    <nav class="nav-card border-b border-pink-100 sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-6">
-            <div class="flex flex-col md:flex-row items-center justify-between py-4 md:h-20">
-                <div class="flex items-center mb-4 md:mb-0 group cursor-pointer" onclick="location.reload()">
-                    <div class="p-2 bg-pink-50 rounded-2xl group-hover:bg-pink-100 transition-colors">
-                        <img src="logo.jpg" alt="Logo" class="h-10 w-auto object-contain">
+            <div class="flex flex-col lg:flex-row items-center justify-between py-5 lg:h-28">
+                <div class="flex items-center mb-5 lg:mb-0 group cursor-pointer" onclick="location.reload()">
+                    <div class="relative">
+                        <div class="absolute -inset-2 bg-pink-200 rounded-full blur-xl opacity-40 group-hover:opacity-60 transition duration-500"></div>
+                        <img src="logo.jpg" alt="Logo" class="relative h-14 lg:h-16 w-auto object-contain">
                     </div>
-                    <div class="ml-3">
-                        <h1 class="font-bold text-lg text-slate-800 leading-tight">ระบบเบิกจ่ายวัสดุ</h1>
-                        <p class="text-pink-500 font-bold text-[10px] uppercase tracking-widest">MECCP Inventory</p>
+                    <div class="ml-4">
+                        <h1 class="font-bold text-xl lg:text-2xl text-slate-800 tracking-tight leading-none">ระบบเบิกจ่ายวัสดุสำนักงาน</h1>
+                        <p class="text-pink-500 font-bold text-[11px] lg:text-xs mt-1.5 uppercase tracking-[0.15em]">MECCP Inventory Management</p>
                     </div>
                 </div>
                 
-                <div class="flex items-center p-1 bg-slate-100 rounded-xl w-full md:w-auto">
-                    <button onclick="switchTab('user')" id="btn-tab-user" class="flex-1 md:flex-none px-6 py-2 rounded-lg text-sm font-bold glass-btn bg-white text-pink-500 shadow-sm border border-slate-200/50">
-                        หน้าเบิก
+                <div class="flex items-center p-1.5 bg-pink-50/80 rounded-2xl w-full lg:w-auto border border-pink-100/50">
+                    <button onclick="switchTab('user')" id="btn-tab-user" class="flex-1 lg:flex-none flex items-center justify-center px-6 py-2.5 rounded-xl text-base font-bold glass-btn bg-white text-pink-500 shadow-sm border border-pink-100">
+                        <span>หน้าเบิก</span>
                     </button>
-                    <button onclick="switchTab('admin')" id="btn-tab-admin" class="flex-1 md:flex-none px-6 py-2 rounded-lg text-sm font-bold glass-btn text-slate-500 hover:text-pink-500">
-                        อนุมัติ
+                    <button onclick="switchTab('admin')" id="btn-tab-admin" class="flex-1 lg:flex-none flex items-center justify-center px-6 py-2.5 rounded-xl text-base font-bold glass-btn text-slate-400 hover:text-pink-500">
+                        <span>อนุมัติ</span>
                     </button>
-                    <button onclick="switchTab('dashboard')" id="btn-tab-dashboard" class="flex-1 md:flex-none px-6 py-2 rounded-lg text-sm font-bold glass-btn text-slate-500 hover:text-pink-500">
-                        คลังสินค้า
+                    <button onclick="switchTab('dashboard')" id="btn-tab-dashboard" class="flex-1 lg:flex-none flex items-center justify-center px-6 py-2.5 rounded-xl text-base font-bold glass-btn text-slate-400 hover:text-pink-500">
+                        <span>คลังวัสดุ</span>
                     </button>
                 </div>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-6xl mx-auto p-6 md:p-10 flex justify-center">
+    <main class="max-w-6xl mx-auto p-4 lg:p-10 flex justify-center">
 
-        <!-- ================= PAGE 1: USER (Compact) ================= -->
-        <div id="page-user" class="w-full max-w-lg animate-fade-in block">
-            <div class="bg-white rounded-3xl sleek-shadow border border-slate-100 overflow-hidden">
-                <div class="bg-pink-500 px-8 py-10 text-center relative">
-                    <h2 class="text-2xl font-extrabold text-white">เบิกวัสดุสำนักงาน</h2>
-                    <p class="text-pink-100 font-medium text-sm mt-1">กรอกข้อมูลเพื่อแจ้งความประสงค์</p>
+        <!-- ================= PAGE 1: USER ================= -->
+        <div id="page-user" class="w-full max-w-xl animate-fade-in block">
+            <div class="bg-white rounded-[3.5rem] pastel-shadow border border-pink-50 p-3">
+                <div class="bg-pink-400 rounded-[2.8rem] px-8 py-12 text-center relative overflow-hidden shadow-inner">
+                    <div class="absolute -top-12 -left-12 w-56 h-56 bg-white/20 rounded-full blur-3xl"></div>
+                    <div class="absolute -bottom-12 -right-12 w-56 h-56 bg-pink-300/30 rounded-full blur-3xl"></div>
+                    <h2 class="text-3xl font-black text-white mb-2">เบิกวัสดุอุปกรณ์</h2>
+                    <p class="text-pink-50 font-bold text-base opacity-90">สะดวก รวดเร็ว และเป็นระบบ</p>
                 </div>
                 
-                <div id="lowStockAlertContainer" class="px-8 pt-6 hidden">
-                    <div class="bg-rose-50 border border-rose-100 rounded-2xl p-4 flex items-start">
-                        <svg class="w-5 h-5 text-rose-500 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
-                        <div>
-                            <p class="text-xs font-bold text-rose-700">รายการที่ต้องระวัง (ของเหลือน้อย)</p>
-                            <ul id="lowStockList" class="text-[11px] text-rose-600 mt-1 grid grid-cols-2 gap-x-4"></ul>
+                <div id="lowStockAlertContainer" class="px-7 pt-7 hidden">
+                    <div class="bg-rose-50 border border-rose-100 rounded-[2.2rem] p-5">
+                        <div class="flex items-center text-rose-700 font-bold text-sm mb-3">
+                            <span class="relative flex h-3 w-3 mr-3">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-3 w-3 bg-rose-500"></span>
+                            </span>
+                            วัสดุใกล้หมดคลัง
                         </div>
+                        <ul id="lowStockList" class="text-xs text-rose-600/90 space-y-2 grid grid-cols-1 sm:grid-cols-2 gap-x-6"></ul>
                     </div>
                 </div>
 
-                <form id="requisitionForm" onsubmit="handleFormSubmit(event)" class="p-8 space-y-5">
-                    <div class="space-y-1.5">
-                        <label class="text-xs font-bold text-slate-500 ml-1 uppercase tracking-wider">ผู้ขอเบิก</label>
-                        <input type="text" id="name" required placeholder="ชื่อ-นามสกุล" 
-                               class="w-full px-5 py-3 rounded-xl bg-slate-50 text-slate-800 placeholder:text-slate-300">
+                <form id="requisitionForm" onsubmit="handleFormSubmit(event)" class="p-8 lg:p-10 space-y-6">
+                    <div class="space-y-2">
+                        <label class="block text-base font-black text-slate-500 ml-2">ชื่อ-นามสกุลผู้ขอเบิก</label>
+                        <input type="text" id="name" required placeholder="ระบุชื่อจริง-นามสกุล" 
+                               class="w-full px-6 py-4 rounded-2xl bg-pink-50/50 text-slate-800 placeholder:text-slate-300 text-lg">
                     </div>
                     
-                    <div class="grid grid-cols-1 gap-5">
-                        <div class="space-y-1.5">
-                            <label class="text-xs font-bold text-slate-500 ml-1 uppercase tracking-wider">รายการวัสดุ</label>
-                            <select id="item" required class="w-full px-5 py-3 rounded-xl bg-slate-50 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2020%2020%22%20fill%3D%22none%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M5%208L10%2013L15%208%22%20stroke%3D%22%23cbd5e1%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E')] bg-[length:18px] bg-[right_1.25rem_center] bg-no-repeat">
-                                <option value="" disabled selected>เลือกรายการวัสดุ</option>
-                            </select>
+                    <div class="grid grid-cols-1 gap-6">
+                        <div class="space-y-2">
+                            <label class="block text-base font-black text-slate-500 ml-2">เลือกรายการวัสดุ</label>
+                            <div class="relative">
+                                <select id="item" required class="w-full px-6 py-4 rounded-2xl bg-pink-50/50 appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpath%20d%3D%22M7%2010L12%2015L17%2010%22%20stroke%3D%22%23f9a8d4%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E')] bg-[length:22px] bg-[right_1.5rem_center] bg-no-repeat text-lg">
+                                    <option value="" disabled selected>เลือกรายการที่ต้องการ</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="space-y-1.5">
-                            <label class="text-xs font-bold text-slate-500 ml-1 uppercase tracking-wider">จำนวน</label>
+                        <div class="space-y-2">
+                            <label class="block text-base font-black text-slate-500 ml-2">ระบุจำนวน</label>
                             <input type="number" id="quantity" min="1" required placeholder="0"
-                                   class="w-full px-5 py-3 rounded-xl bg-slate-50 text-center font-bold text-xl text-pink-600">
+                                   class="w-full px-6 py-4 rounded-2xl bg-pink-50/50 text-center font-black text-2xl text-pink-600">
                         </div>
                     </div>
 
                     <div class="pt-4">
-                        <button type="submit" id="submitBtn" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-4 rounded-xl shadow-lg transition-all flex justify-center items-center">
-                            <span>ยืนยันคำขอเบิก</span>
+                        <button type="submit" id="submitBtn" class="w-full bg-pink-400 hover:bg-pink-500 text-white font-black py-5 rounded-[2.2rem] shadow-lg shadow-pink-100 transition-all flex justify-center items-center text-xl">
+                            <span>ส่งคำขอเบิกวัสดุ</span>
                         </button>
                     </div>
                 </form>
             </div>
         </div>
 
-        <!-- ================= PAGE 2: ADMIN (Sleek Table) ================= -->
+        <!-- ================= PAGE 2: ADMIN ================= -->
         <div id="page-admin" class="w-full hidden animate-fade-in">
-            <div class="flex flex-col md:flex-row justify-between items-center mb-6 px-2">
+            <div class="flex flex-col lg:flex-row justify-between items-end mb-8 px-4">
                 <div>
-                    <h2 class="text-2xl font-black text-slate-800">รายการรอดำเนินการ</h2>
-                    <p class="text-slate-500 text-sm">ตรวจสอบและอนุมัติคำขอเบิก</p>
+                    <h2 class="text-3xl font-black text-slate-800">การอนุมัติ</h2>
+                    <p class="text-pink-500 font-bold text-lg">รายการคำขอเบิกที่รอดำเนินการ</p>
                 </div>
-                <button onclick="refreshData()" class="mt-4 md:mt-0 px-5 py-2 rounded-xl bg-white text-slate-600 font-bold text-sm border border-slate-200 hover:bg-slate-50 transition-all sleek-shadow">
-                    ↻ รีเฟรช
+                <button onclick="refreshData()" class="mt-4 lg:mt-0 px-6 py-3 rounded-2xl bg-white text-pink-500 font-bold text-sm flex items-center hover:bg-pink-50 border-2 border-pink-100 transition-all pastel-shadow">
+                    ↻ รีเฟรชข้อมูล
                 </button>
             </div>
 
-            <div class="bg-white rounded-2xl sleek-shadow border border-slate-100 overflow-hidden mb-8">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse min-w-[800px]">
+            <div class="bg-white rounded-[3rem] pastel-shadow border border-pink-50 overflow-hidden mb-10">
+                <div class="table-container overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[850px]">
                         <thead>
-                            <tr>
-                                <th>รหัส / เวลา</th>
-                                <th>ผู้เบิก</th>
-                                <th>รายการ</th>
-                                <th class="text-center">สถานะ</th>
-                                <th class="text-right">จัดการ</th>
+                            <tr class="bg-pink-50/20">
+                                <th class="px-10 py-7">ข้อมูลคำขอ</th>
+                                <th class="px-10 py-7">รายการวัสดุ</th>
+                                <th class="px-10 py-7 text-center">สถานะ</th>
+                                <th class="px-10 py-7 text-right">ดำเนินการ</th>
                             </tr>
                         </thead>
-                        <tbody id="requestsBody" class="divide-y divide-slate-50 text-sm font-medium"></tbody>
+                        <tbody id="requestsBody" class="divide-y divide-pink-50/50 text-base"></tbody>
                     </table>
-                </div>
-                <div id="emptyState" class="hidden text-center py-20 text-slate-400">
-                    <p>ไม่มีรายการค้างอนุมัติในขณะนี้</p>
+                    <div id="emptyState" class="hidden text-center py-24 text-slate-300">
+                        <p class="text-xl font-bold">ไม่มีรายการที่ค้างตรวจสอบ</p>
+                    </div>
                 </div>
             </div>
 
-            <!-- History Summary -->
-            <div class="bg-white rounded-2xl sleek-shadow border border-slate-100 overflow-hidden">
-                <div class="px-6 py-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center">
-                    <h3 class="font-bold text-slate-700">ประวัติล่าสุด</h3>
-                    <button onclick="printHistoryPDF()" class="text-pink-500 font-bold text-xs hover:underline">ออกรายงาน PDF</button>
+            <!-- History Section -->
+            <div class="bg-slate-800 rounded-[3rem] p-10 text-white pastel-shadow overflow-hidden">
+                <div class="flex flex-col lg:flex-row justify-between items-center mb-8">
+                    <div class="flex items-center">
+                        <div class="p-4 bg-white/10 rounded-2xl mr-5">
+                            <svg class="w-6 h-6 text-pink-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-black">ประวัติการเบิกจ่าย</h3>
+                    </div>
+                    <button onclick="printHistoryPDF()" class="mt-4 lg:mt-0 bg-pink-400 hover:bg-pink-300 text-white px-8 py-3.5 rounded-2xl font-bold transition-all flex items-center shadow-lg shadow-pink-900/20">
+                        พิมพ์รายงาน PDF
+                    </button>
                 </div>
-                <div class="overflow-x-auto max-h-80">
-                    <table class="w-full text-left border-collapse text-xs font-medium">
-                        <tbody id="historyBody" class="divide-y divide-slate-50"></tbody>
+                <div class="table-container overflow-x-auto max-h-[500px]">
+                    <table class="w-full text-left border-collapse min-w-[700px]">
+                        <thead class="border-b border-white/10">
+                            <tr>
+                                <th class="px-6 py-5 !text-slate-400 !text-sm !font-bold">ID/เวลา</th>
+                                <th class="px-6 py-5 !text-slate-400 !text-sm !font-bold">ผู้เบิก</th>
+                                <th class="px-6 py-5 !text-slate-400 !text-sm !font-bold">รายการ</th>
+                                <th class="px-6 py-5 !text-slate-400 !text-sm !font-bold text-center">สถานะ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyBody" class="text-base text-slate-400 divide-y divide-white/5 font-medium"></tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- ================= PAGE 3: DASHBOARD (Compact Inventory) ================= -->
+        <!-- ================= PAGE 3: DASHBOARD ================= -->
         <div id="page-dashboard" class="w-full hidden animate-fade-in">
-            <div class="flex flex-col md:flex-row justify-between items-center mb-6 px-2">
+            <div class="flex flex-col lg:flex-row justify-between items-end mb-8 px-4">
                 <div>
-                    <h2 class="text-2xl font-black text-slate-800">จัดการคลังสินค้า</h2>
-                    <p class="text-slate-500 text-sm">ตรวจสอบจำนวนคงเหลือและจุดแจ้งเตือน</p>
+                    <h2 class="text-3xl font-black text-slate-800">คลังวัสดุ</h2>
+                    <p class="text-pink-500 font-bold text-lg">รายการวัสดุอุปกรณ์ทั้งหมด</p>
                 </div>
-                <button onclick="openAddItemModal()" class="mt-4 md:mt-0 bg-pink-500 hover:bg-pink-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm shadow-md transition-all">
-                    + เพิ่มวัสดุใหม่
+                <button onclick="openAddItemModal()" class="mt-4 lg:mt-0 bg-pink-400 hover:bg-pink-500 text-white px-8 py-3.5 rounded-2xl font-bold shadow-lg shadow-pink-100 transition-all">
+                    + เพิ่มรายการใหม่
                 </button>
             </div>
             
-            <div class="bg-white rounded-2xl sleek-shadow border border-slate-100 overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse min-w-[800px]">
+            <div class="bg-white rounded-[3rem] pastel-shadow border border-pink-50 overflow-hidden">
+                <div class="table-container overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[850px]">
                         <thead>
-                            <tr>
-                                <th>ชื่อรายการ</th>
-                                <th class="text-center">คงเหลือ</th>
-                                <th class="text-center">แจ้งเตือน</th>
-                                <th class="text-center">สถานะ</th>
-                                <th class="text-right">จัดการ</th>
+                            <tr class="bg-pink-50/20">
+                                <th class="px-10 py-8">ชื่อรายการวัสดุ</th>
+                                <th class="px-10 py-8 text-center">คงเหลือ</th>
+                                <th class="px-10 py-8 text-center">จุดเตือน</th>
+                                <th class="px-10 py-8 text-center">สถานะ</th>
+                                <th class="px-10 py-8 text-right">จัดการ</th>
                             </tr>
                         </thead>
-                        <tbody id="inventoryBody" class="divide-y divide-slate-50 text-sm font-semibold"></tbody>
+                        <tbody id="inventoryBody" class="divide-y divide-pink-50/50 text-lg font-bold"></tbody>
                     </table>
                 </div>
             </div>
@@ -218,7 +242,7 @@
 
     <script>
         const API_URL = "https://script.google.com/macros/s/AKfycbzXe2i0cqWqj8Xe4sd5HOj4czk231hkwyBzQNC9zm9Wd0Gbtu6ZJCjJ731r4DJnYoPC/exec"; 
-        const ADMIN_NAME = "System Admin";
+        const ADMIN_NAME = "Medical Center Administrator";
         const ADMIN_PASSWORD = "1234";
         let isAdminLoggedIn = false;
         
@@ -251,7 +275,7 @@
         }
 
         async function refreshData(showLoading = true) {
-            if(showLoading) Swal.fire({ title: 'กำลังโหลด...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+            if(showLoading) Swal.fire({ title: 'กำลังโหลดข้อมูล...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
             try {
                 const res = await callAPI('getData');
                 if(res.status === 'success') {
@@ -259,24 +283,25 @@
                     globalData.requests = res.requests;
                     renderUI();
                     if(showLoading) Swal.close();
+                } else {
+                    Swal.fire('Error', res.message, 'error');
                 }
             } catch (e) {
-                Swal.fire('Error', 'ไม่สามารถเชื่อมต่อฐานข้อมูลได้', 'error');
+                Swal.fire('Error', 'ไม่สามารถดึงข้อมูลได้', 'error');
             }
         }
 
         async function switchTab(tabId) {
             if ((tabId === 'admin' || tabId === 'dashboard') && !isAdminLoggedIn) {
                 const { value: password } = await Swal.fire({
-                    title: 'ยืนยันรหัสผ่าน',
+                    title: '🔐 ยืนยันรหัสผ่าน',
                     input: 'password',
-                    showCancelButton: true,
                     confirmButtonColor: '#f472b6',
                 });
                 if (password === ADMIN_PASSWORD) {
                     isAdminLoggedIn = true;
                 } else if (password) {
-                    Swal.fire('รหัสไม่ถูกต้อง', '', 'error');
+                    Swal.fire({ icon: 'error', title: 'รหัสผ่านผิดพลาด' });
                     return;
                 } else return;
             }
@@ -285,11 +310,11 @@
                 const el = document.getElementById(`page-${t}`);
                 const btn = document.getElementById(`btn-tab-${t}`);
                 el.classList.add('hidden');
-                btn.className = "flex-1 md:flex-none px-6 py-2 rounded-lg text-sm font-bold glass-btn text-slate-500 hover:text-pink-500";
+                btn.className = "flex-1 lg:flex-none flex items-center justify-center px-6 py-2.5 rounded-xl text-base font-bold glass-btn text-slate-400 hover:text-pink-500";
             });
 
             const currentBtn = document.getElementById(`btn-tab-${tabId}`);
-            currentBtn.className = "flex-1 md:flex-none px-6 py-2 rounded-lg text-sm font-bold glass-btn bg-white text-pink-500 shadow-sm border border-slate-200/50";
+            currentBtn.className = "flex-1 lg:flex-none flex items-center justify-center px-6 py-2.5 rounded-xl text-base font-bold glass-btn bg-white text-pink-500 shadow-sm border border-pink-100";
             document.getElementById(`page-${tabId}`).classList.remove('hidden');
             
             if(globalData.inventory.length === 0) refreshData();
@@ -310,7 +335,7 @@
             const lowItems = globalData.inventory.filter(item => item.stock <= item.threshold);
             if (lowItems.length > 0) {
                 lowItems.forEach(item => {
-                    list.innerHTML += `<li class="mb-0.5">• ${item.name} (${item.stock})</li>`;
+                    list.innerHTML += `<li class="font-bold text-rose-700">• ${item.name} (${item.stock})</li>`;
                 });
                 container.classList.remove('hidden');
             } else container.classList.add('hidden');
@@ -319,7 +344,7 @@
         function loadUserDropdown() {
             var select = document.getElementById('item');
             select.innerHTML = '<option value="" disabled selected>เลือกรายการวัสดุ</option>';
-            globalData.inventory.forEach(item => {
+            [...globalData.inventory].sort((a,b)=>a.name.localeCompare(b.name)).forEach(item => {
                 var opt = document.createElement('option');
                 opt.value = item.name;
                 opt.text = `${item.name} (คงเหลือ: ${item.stock})`;
@@ -332,7 +357,6 @@
             event.preventDefault();
             var btn = document.getElementById("submitBtn");
             btn.disabled = true;
-            
             try {
                 const res = await callAPI('saveRequest', { 
                     data: { 
@@ -343,7 +367,7 @@
                     } 
                 });
                 if(res.status === 'success') {
-                    Swal.fire('ส่งคำขอสำเร็จ', `รหัส: ${res.id}`, 'success');
+                    Swal.fire('สำเร็จ', `รหัสอ้างอิง: ${res.id}`, 'success');
                     event.target.reset();
                     refreshData(false);
                 }
@@ -363,34 +387,39 @@
                 if(req.status === "รออนุมัติ") {
                     pending++;
                     tbody.innerHTML += `
-                        <tr class="hover:bg-slate-50">
-                            <td class="px-6 py-4">
-                                <span class="font-bold text-slate-800">${req.id}</span><br>
-                                <span class="text-[10px] text-slate-400 font-bold">${time}</span>
+                        <tr class="hover:bg-pink-50/10">
+                            <td class="px-10 py-8">
+                                <div class="font-black text-slate-800 text-xl">${req.id}</div>
+                                <div class="text-sm text-pink-400 font-bold mt-1">${time}</div>
+                                <div class="mt-4 text-slate-600 font-bold flex items-center">
+                                    <div class="w-10 h-10 rounded-2xl bg-pink-100 text-pink-500 flex items-center justify-center mr-3 text-sm font-black border-2 border-pink-200">
+                                        ${req.name.charAt(0)}
+                                    </div>
+                                    ${req.name}
+                                </div>
                             </td>
-                            <td class="px-6 py-4 text-slate-600">${req.name}</td>
-                            <td class="px-6 py-4">
-                                <span class="text-slate-800">${req.item}</span><br>
-                                <span class="text-xs text-pink-500 font-bold">จำนวน ${req.qty}</span>
+                            <td class="px-10 py-8">
+                                <div class="text-slate-800 font-black text-lg">${req.item}</div>
+                                <div class="text-xs text-pink-500 font-black mt-1 uppercase tracking-wider">จำนวน: ${req.qty}</div>
                             </td>
-                            <td class="px-6 py-4 text-center">
-                                <span class="text-[10px] bg-amber-50 text-amber-500 px-2 py-0.5 rounded-md font-bold border border-amber-100 uppercase">Pending</span>
+                            <td class="px-10 py-8 text-center">
+                                <span class="bg-amber-100 text-amber-600 px-4 py-1 rounded-lg text-xs font-black border-2 border-amber-200 uppercase tracking-widest">Pending</span>
                             </td>
-                            <td class="px-6 py-4 text-right">
-                                <div class="flex justify-end space-x-2">
-                                    <button onclick="processRequest('${req.id}', 'อนุมัติแล้ว')" class="bg-pink-500 text-white px-4 py-1.5 rounded-lg text-xs font-bold glass-btn">อนุมัติ</button>
-                                    <button onclick="processRequest('${req.id}', 'ไม่อนุมัติ')" class="text-rose-500 border border-rose-100 px-4 py-1.5 rounded-lg text-xs font-bold glass-btn">ปฏิเสธ</button>
+                            <td class="px-10 py-8 text-right">
+                                <div class="flex justify-end space-x-3">
+                                    <button onclick="processRequest('${req.id}', 'อนุมัติแล้ว')" class="bg-pink-400 hover:bg-pink-500 text-white px-6 py-2.5 rounded-2xl text-xs font-black shadow-lg shadow-pink-100 glass-btn">อนุมัติ</button>
+                                    <button onclick="processRequest('${req.id}', 'ไม่อนุมัติ')" class="text-rose-500 border-2 border-rose-100 px-6 py-2.5 rounded-2xl text-xs font-black glass-btn">ปฏิเสธ</button>
                                 </div>
                             </td>
                         </tr>`;
                 } else {
-                    let color = req.status === "อนุมัติแล้ว" ? "text-emerald-500" : "text-rose-400";
+                    let badge = req.status === "อนุมัติแล้ว" ? `<span class="text-pink-500 font-black">APPROVED</span>` : `<span class="text-rose-400 font-black">REJECTED</span>`;
                     historyBody.innerHTML += `
-                        <tr class="hover:bg-slate-50 transition-colors">
-                            <td class="px-6 py-3 font-bold text-slate-400">${req.id}</td>
-                            <td class="px-6 py-3 text-slate-500">${req.name}</td>
-                            <td class="px-6 py-3 text-slate-500">${req.item} (x${req.qty})</td>
-                            <td class="px-6 py-3 text-right font-black ${color} text-[10px]">${req.status}</td>
+                        <tr class="hover:bg-white/5 transition-colors">
+                            <td class="px-6 py-6 font-black text-white text-lg">${req.id}</td>
+                            <td class="px-6 py-6 font-bold text-slate-300">${req.name}</td>
+                            <td class="px-6 py-6 text-slate-400 font-bold">${req.item} (x${req.qty})</td>
+                            <td class="px-6 py-6 text-center text-xs">${badge}</td>
                         </tr>`;
                 }
             });
@@ -398,7 +427,7 @@
         }
 
         async function processRequest(id, status) {
-            Swal.fire({ title: 'กำลังดำเนินการ...', didOpen: () => Swal.showLoading() });
+            Swal.fire({ title: 'กำลังประมวลผล...', didOpen: () => Swal.showLoading() });
             const res = await callAPI('updateStatus', { id: id, status: status, adminName: ADMIN_NAME });
             if(res.status === 'success') {
                 refreshData(false);
@@ -409,22 +438,22 @@
         function loadDashboard() {
             const tbody = document.getElementById('inventoryBody');
             tbody.innerHTML = '';
-            globalData.inventory.forEach(item => {
+            [...globalData.inventory].sort((a,b)=>a.name.localeCompare(b.name)).forEach(item => {
                 const isLow = item.stock <= item.threshold;
                 tbody.innerHTML += `
-                    <tr class="${isLow ? 'bg-rose-50/30' : 'hover:bg-slate-50'} transition-colors">
-                        <td class="px-10 py-5 font-bold text-slate-700">${item.name}</td>
-                        <td class="px-10 py-5 text-center text-xl font-black ${isLow ? 'text-rose-500' : 'text-slate-800'}">${item.stock}</td>
-                        <td class="px-10 py-5 text-center text-slate-400">${item.threshold}</td>
-                        <td class="px-10 py-5 text-center">
-                            <span class="text-[10px] font-black px-2 py-1 rounded-md ${isLow ? 'bg-rose-100 text-rose-600' : 'bg-emerald-100 text-emerald-600'}">
-                                ${isLow ? 'LOW' : 'OK'}
+                    <tr class="${isLow ? 'bg-rose-50/20' : 'hover:bg-slate-50'} transition-colors">
+                        <td class="px-10 py-8 text-slate-700">${item.name}</td>
+                        <td class="px-10 py-8 text-center text-2xl font-black ${isLow ? 'text-rose-500' : 'text-slate-800'}">${item.stock}</td>
+                        <td class="px-10 py-8 text-center text-slate-300 font-black">${item.threshold}</td>
+                        <td class="px-10 py-8 text-center">
+                            <span class="text-[10px] font-black px-3 py-1.5 rounded-lg ${isLow ? 'bg-rose-100 text-rose-600' : 'bg-pink-50 text-pink-500'} tracking-widest">
+                                ${isLow ? 'LOW STOCK' : 'HEALTHY'}
                             </span>
                         </td>
-                        <td class="px-10 py-5 text-right">
-                            <div class="flex justify-end space-x-2">
-                                <button onclick="restockItem('${item.name}')" class="text-xs font-bold text-pink-500 hover:underline">เติมของ</button>
-                                <button onclick="deleteItem('${item.name}')" class="text-xs font-bold text-rose-300 hover:text-rose-500">ลบ</button>
+                        <td class="px-10 py-8 text-right">
+                            <div class="flex justify-end space-x-3">
+                                <button onclick="restockItem('${item.name}')" class="text-xs font-black text-pink-500 hover:text-pink-600 transition-colors">เติมสต๊อก</button>
+                                <button onclick="deleteItem('${item.name}')" class="text-xs font-black text-slate-300 hover:text-rose-500 transition-colors">ลบ</button>
                             </div>
                         </td>
                     </tr>`;
@@ -432,7 +461,7 @@
         }
 
         async function restockItem(name) {
-            const { value: q } = await Swal.fire({ title: 'เติมวัสดุ', text: name, input: 'number', showCancelButton: true });
+            const { value: q } = await Swal.fire({ title: 'เติมวัสดุเข้าคลัง', text: name, input: 'number', showCancelButton: true, confirmButtonColor: '#f472b6' });
             if(q) {
                 await callAPI('restockItem', { name: name, qty: parseInt(q) });
                 refreshData();
@@ -440,7 +469,7 @@
         }
 
         async function deleteItem(name) {
-            const res = await Swal.fire({ title: 'ยืนยันการลบ?', text: name, icon: 'warning', showCancelButton: true });
+            const res = await Swal.fire({ title: 'ลบรายการ?', text: name, icon: 'warning', showCancelButton: true, confirmButtonColor: '#fb7185' });
             if(res.isConfirmed) {
                 await callAPI('deleteInventoryItem', { name: name });
                 refreshData();
@@ -449,8 +478,9 @@
 
         async function openAddItemModal() {
             const { value: v } = await Swal.fire({
-                title: 'เพิ่มวัสดุใหม่',
-                html: '<input id="i-n" class="swal2-input" placeholder="ชื่อวัสดุ"><input id="i-s" type="number" class="swal2-input" placeholder="จำนวนเริ่มต้น"><input id="i-t" type="number" class="swal2-input" placeholder="จุดแจ้งเตือน">',
+                title: 'เพิ่มรายการใหม่',
+                html: '<input id="i-n" class="swal2-input" placeholder="ชื่อวัสดุอุปกรณ์"><input id="i-s" type="number" class="swal2-input" placeholder="สต๊อกเริ่มต้น"><input id="i-t" type="number" class="swal2-input" placeholder="จุดแจ้งเตือน">',
+                confirmButtonColor: '#f472b6',
                 preConfirm: () => ({ name: document.getElementById('i-n').value, stock: parseInt(document.getElementById('i-s').value), threshold: parseInt(document.getElementById('i-t').value) })
             });
             if(v && v.name) {
@@ -461,13 +491,14 @@
 
         function printHistoryPDF() {
             const win = window.open('', '_blank');
-            win.document.write('<html><body style="font-family:Sarabun; padding:40px;"><h2>รายงานประวัติการเบิกวัสดุ</h2><hr>');
-            globalData.requests.filter(r => r.status !== 'รออนุมัติ').forEach(r => {
-                win.document.write(`<p><b>[${r.id}]</b> ${r.name} - ${r.item} (x${r.qty}) : <span style="color:${r.status==='อนุมัติแล้ว'?'green':'red'}">${r.status}</span></p>`);
+            win.document.write('<html><head><title>Inventory Report</title><style>body{font-family:Sarabun,sans-serif;padding:40px;color:#334155}table{width:100%;border-collapse:collapse;margin-top:20px}th,td{border-bottom:1px solid #f1f5f9;padding:12px;text-align:left;font-size:14px}th{background:#fff1f2;color:#f472b6;font-size:12px;text-transform:uppercase;letter-spacing:1px}</style></head><body><h2>ประวัติการเบิกจ่ายวัสดุอุปกรณ์</h2><hr>');
+            win.document.write('<table><thead><tr><th>Request ID</th><th>Requester</th><th>Item</th><th>Qty</th><th>Status</th></tr></thead><tbody>');
+            globalData.requests.filter(r => r.status !== 'รออนุมัติ').reverse().forEach(r => {
+                win.document.write(`<tr><td>${r.id}</td><td>${r.name}</td><td>${r.item}</td><td>${r.qty}</td><td>${r.status}</td></tr>`);
             });
-            win.document.write('</body></html>');
+            win.document.write('</tbody></table></body></html>');
             win.document.close();
-            win.print();
+            setTimeout(() => win.print(), 800);
         }
 
         document.addEventListener('DOMContentLoaded', () => refreshData());
